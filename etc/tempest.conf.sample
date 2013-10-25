@@ -401,6 +401,14 @@ ssh_user = cirros
 # testing."
 large_ops_number = 0
 
+[murano]
+# Murano endpoint
+murano_url = http://127.0.0.1:8082
+# AglistnerIP for creating SQL cluster
+agListnerIP = 10.0.0.155
+# ClusterIP for creating SQL cluster
+clusterIP = 10.0.0.150
+
 [cli]
 # Enable cli tests
 enabled = True
@@ -424,6 +432,8 @@ nova = True
 heat = false
 # Whether or not horizon is expected to be available
 horizon = True
+# Whether or not murano is expected to be available
+murano = false
 
 [stress]
 # Maximum number of instances to create during test

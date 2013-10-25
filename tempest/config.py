@@ -474,6 +474,22 @@ BotoGroup = [
                help="Status Change Test Interval"),
 ]
 
+
+murano_group = cfg.OptGroup(name='murano', title='Tests for Murano')
+
+MuranoGroup = [
+    cfg.StrOpt('murano_url',
+               default = 'http://127.0.0.1:8082/',
+               help = 'Murano endpoint'),
+    cfg.StrOpt('agListnerIP',
+               default = '10.100.0.155',
+               help = 'agListnerIP for sql cluster json'),
+    cfg.StrOpt('clusterIP',
+               default = '10.100.0.150',
+               help = 'clusterIP for sql cluster json')
+]
+
+
 stress_group = cfg.OptGroup(name='stress', title='Stress Test Options')
 
 StressGroup = [
@@ -560,7 +576,11 @@ ServiceAvailableGroup = [
     cfg.BoolOpt('horizon',
                 default=True,
                 help="Whether or not Horizon is expected to be available"),
+    cfg.BoolOpt('murano',
+                default = False,
+                help = "Whether or not murano is expected to be available"),
 ]
+
 
 debug_group = cfg.OptGroup(name="debug",
                            title="Debug System")
@@ -619,6 +639,7 @@ class TempestConfig:
         register_opt_group(cfg.CONF, orchestration_group, OrchestrationGroup)
         register_opt_group(cfg.CONF, dashboard_group, DashboardGroup)
         register_opt_group(cfg.CONF, boto_group, BotoGroup)
+        register_opt_group(cfg.CONF, murano_group, MuranoGroup)
         register_opt_group(cfg.CONF, compute_admin_group, ComputeAdminGroup)
         register_opt_group(cfg.CONF, stress_group, StressGroup)
         register_opt_group(cfg.CONF, scenario_group, ScenarioGroup)
@@ -636,6 +657,7 @@ class TempestConfig:
         self.boto = cfg.CONF.boto
         self.compute_admin = cfg.CONF['compute-admin']
         self.stress = cfg.CONF.stress
+        self.murano = cfg.CONF.murano
         self.scenario = cfg.CONF.scenario
         self.service_available = cfg.CONF.service_available
         self.debug = cfg.CONF.debug
