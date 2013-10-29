@@ -17,6 +17,8 @@
 
 from tempest import config
 from tempest.common import rest_client
+import novaclient.v1_1.client as nvclient
+import socket
 import tempest.test
 import json
 
@@ -48,6 +50,7 @@ class MuranoTest(tempest.test.BaseTestCase):
 
         response, environment = self.create_environment('test455444')
         self.environments = [environment, ]
+        self.inst_wth_fl_ip = []
 
     def tearDown(self):
         """
@@ -61,6 +64,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         for environment in self.environments:
             try:
                 response = self.delete_environment(environment['id'])
+            except:
+                pass
+        for inst in self.inst_wth_fl_ip:
+            try:
+                self.remove_floating_ip(inst)
             except:
                 pass
 
@@ -125,6 +133,44 @@ class MuranoTest(tempest.test.BaseTestCase):
                                      self.client.headers)
         return resp, json.loads(body)
 
+    def nova_auth(self):
+        user = self.config.identity.admin_username
+        password = self.config.identity.admin_password
+        tenant = self.config.identity.admin_tenant_name
+        auth_url = self.config.identity.uri
+        nova = nvclient.Client(user, password, tenant, auth_url,
+                               service_type = "compute")
+        return nova
+
+    def search_instances(self, environment_id, hostname):
+        nova = self.nova_auth()
+        somelist = []
+        for i in nova.servers.list():
+            if ((str(environment_id) in str(i.name))
+                and (str(hostname) in str(i.name))):
+                somelist.append(i.id)
+        return somelist
+
+    def add_floating_ip(self, instance_id):
+        nova = self.nova_auth()
+        pool = nova.floating_ip_pools.list()[0].name
+        ip = nova.floating_ips.create(pool)
+        nova.servers.get(instance_id).add_floating_ip(ip)
+        return ip.ip
+
+    def remove_floating_ip(self, instance_id):
+        nova = self.nova_auth()
+        fl_ips = nova.floating_ips.findall(instance_id = instance_id)
+        for fl_ip in fl_ips:
+            nova.floating_ips.delete(fl_ip.id)
+        return None
+
+    def socket_check(self, ip, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex((str(ip), port))
+        sock.close()
+        return result
+
     def create_session(self, environment_id):
         """
             This method allow to create session
@@ -178,7 +224,8 @@ class MuranoTest(tempest.test.BaseTestCase):
         """
         post_body = {"type": "activeDirectory","name": "ad.local",
                     "adminPassword": "P@ssw0rd", "domain": "ad.local",
-                    "availabilityZone": "nova", "unitNamingPattern": "",
+                    "availabilityZone": "nova",
+                    "unitNamingPattern": "adinstance",
                     "flavor": "m1.medium", "osImage":
                     {"type": "ws-2012-std", "name": "ws-2012-std", "title":
                     "Windows Server 2012 Standard"},"configuration":
@@ -205,12 +252,13 @@ class MuranoTest(tempest.test.BaseTestCase):
         creds = {'username': 'Administrator',
                  'password': 'P@ssw0rd'}
         post_body = {"type": "webServer", "domain": domain_name, 
-                      "availabilityZone": "nova", "name": iis_name,
-                      "adminPassword": "P@ssw0rd", "unitNamingPattern": "",
-                       "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
-                       "title": "Windows Server 2012 Standard"},
-                      "units": [{}], "credentials": creds,
-                      "flavor": "m1.medium"}
+                     "availabilityZone": "nova", "name": iis_name,
+                     "adminPassword": "P@ssw0rd",
+                     "unitNamingPattern": "iisinstance",
+                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "title": "Windows Server 2012 Standard"},
+                     "units": [{}], "credentials": creds,
+                     "flavor": "m1.medium"}
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
         resp, body = self.client.post('environments/' + str(environment_id) +
@@ -231,7 +279,8 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = {"type": "aspNetApp", "domain": domain_name, 
                      "availabilityZone": "nova", "name": "someasp", "repository":
                      "git://github.com/Mirantis/murano-mvc-demo.git", 
-                     "adminPassword": "P@ssw0rd", "unitNamingPattern": "",
+                     "adminPassword": "P@ssw0rd",
+                     "unitNamingPattern": "aspnetinstance",
                      "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
                      "title": "Windows Server 2012 Standard"}, 
                      "units": [{}], "credentials": creds, "flavor": "m1.medium"}
@@ -303,7 +352,8 @@ class MuranoTest(tempest.test.BaseTestCase):
         """
         post_body = {"type": "msSqlServer", "domain": domain_name,
                      "availabilityZone": "nova", "name": "SQLSERVER",
-                     "adminPassword": "P@ssw0rd", "unitNamingPattern": "",
+                     "adminPassword": "P@ssw0rd",
+                     "unitNamingPattern": "sqlinstance",
                      "saPassword": "P@ssw0rd", "mixedModeAuth": True,
                      "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
                      "title": "Windows Server 2012 Standard"},"units": [{}],
