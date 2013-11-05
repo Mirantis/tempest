@@ -42,7 +42,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_AD_wo_env_id(self):
         """ Try create AD without env_id
@@ -81,7 +81,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_AD_wo_env_id(self):
         """ Try to delete AD without environment id
@@ -144,7 +144,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_IIS_wo_env_id(self):
         """ Try to create IIS without env id
@@ -183,7 +183,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_IIS_wo_env_id(self):
         """ Try to delete IIS without env id
@@ -246,7 +246,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_apsnet_wo_env_id(self):
         """ Try to create aspnet without env id
@@ -285,7 +285,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_apsnet_wo_env_id(self):
         """ Try to delete aspnet without env id
@@ -348,7 +348,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_IIS_farm_wo_env_id(self):
         """ Try to create IIS farm without env id
@@ -387,7 +387,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_IIS_farm_wo_env_id(self):
         """ Try to delete IIS farm without env id
@@ -450,7 +450,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_apsnet_farm_wo_env_id(self):
         """ Try to create aspnet farm without env id
@@ -489,7 +489,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_apsnet_farm_wo_env_id(self):
         """ Try to delete aspnet farm without env id
@@ -552,7 +552,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_SQL_wo_env_id(self):
         """ Try to create SQL without env id
@@ -591,7 +591,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_SQL_wo_env_id(self):
         """ Try to delete SQL without env id
@@ -674,7 +674,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_linux_agent_wo_env_id(self):
         """ Try create Linux Agent without env_id
@@ -713,7 +713,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp = self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("It is look like a bug")
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_linux_agent_wo_env_id(self):
         """ Try to delete Linux Agent without environment id
