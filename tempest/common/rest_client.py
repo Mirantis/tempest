@@ -22,6 +22,7 @@ import json
 from lxml import etree
 import re
 import time
+from urllib import quote
 
 from tempest.common import http
 from tempest import exceptions
@@ -94,6 +95,19 @@ class RestClient(object):
                              self.build_interval, self.build_timeout,
                              str(self.token)[0:STRING_LIMIT],
                              str(self.headers)[0:STRING_LIMIT])
+
+    @staticmethod
+    def encode_utf8(value):
+        if isinstance(value, unicode):
+            value = value.encode('utf8')
+        return value
+
+    def quote(self, value, safe='/'):
+        value = self.encode_utf8(value)
+        if isinstance(value, str):
+            return quote(value, safe)
+        else:
+            return value
 
     def _set_auth(self):
         """

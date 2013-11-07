@@ -43,7 +43,7 @@ class ObjectClient(RestClient):
 
     def delete_object(self, container, object_name):
         """Delete storage object."""
-        url = "%s/%s" % (str(container), str(object_name))
+        url = "%s/%s" % (str(container), self.quote(object_name))
         resp, body = self.delete(url)
         return resp, body
 

@@ -479,14 +479,14 @@ murano_group = cfg.OptGroup(name='murano', title='Tests for Murano')
 
 MuranoGroup = [
     cfg.StrOpt('murano_url',
-               default = 'http://127.0.0.1:8082/',
-               help = 'Murano endpoint'),
+               default='http://127.0.0.1:8082/',
+               help='Murano endpoint'),
     cfg.StrOpt('agListnerIP',
-               default = '10.100.0.155',
-               help = 'agListnerIP for sql cluster json'),
+               default='10.100.0.155',
+               help='agListnerIP for sql cluster json'),
     cfg.StrOpt('clusterIP',
-               default = '10.100.0.150',
-               help = 'clusterIP for sql cluster json')
+               default='10.100.0.150',
+               help='clusterIP for sql cluster json')
 ]
 
 
@@ -551,6 +551,151 @@ ScenarioGroup = [
 ]
 
 
+savanna_common_group = cfg.OptGroup(name='savanna_common',
+                                    title='Tests for Savanna project')
+
+SavannaCommonGroup = [
+
+    cfg.StrOpt('savanna_host',
+               default='127.0.0.1',
+               help='Host for Savanna'),
+
+    cfg.StrOpt('savanna_port',
+               default='8386',
+               help='Port for Savanna'),
+
+    cfg.StrOpt('savanna_api_version',
+               default='v1.1',
+               help='Api version for Savanna'),
+
+    cfg.IntOpt('cluster_creation_timeout',
+               default=30,
+               help='Cluster creation timeout (in minutes); '
+                    'minimal value is 1'),
+
+    cfg.IntOpt('telnet_timeout',
+               default=5,
+               help='Timeout for node process deployment on cluster '
+                    'nodes (in minutes); minimal value is 1'),
+
+    cfg.IntOpt('HDFS_initialization_timeout',
+               default=5,
+               help='Timeout for HDFS initialization (in minutes); '
+                    'minimal value is 1'),
+
+    cfg.IntOpt('job_launch_timeout',
+               default=5,
+               help='Timeout for job launch (in minutes); '
+                    'minimal value is 1'),
+
+]
+
+
+savanna_vanilla_group = cfg.OptGroup(name='savanna_vanilla',
+                                     title='Savanna project tests '
+                                          'for vanilla plugin')
+SavannaVanillaGroup = [
+
+    cfg.StrOpt('plugin_name',
+               default='vanilla',
+               help='Name of plugin'),
+
+    cfg.StrOpt('hadoop_version',
+               default='1.2.1', help='Version of Hadoop'),
+
+    cfg.StrOpt('hadoop_user',
+               default='hadoop',
+               help='Username which is used for access to Hadoop services'),
+
+    cfg.StrOpt('hadoop_directory',
+               default='/usr/share/hadoop',
+               help='Directory where are located Hadoop jar files'),
+
+    cfg.StrOpt('hadoop_log_directory',
+               default='/mnt/log/hadoop/hadoop/userlogs',
+               help='Directory where is located log info about '
+                    'completed jobs'),
+
+    cfg.DictOpt('hadoop_processes_with_ports',
+                default={'jobtracker': 50030,
+                         'namenode': 50070,
+                         'tasktracker': 50060,
+                         'datanode': 50075,
+                         'secondarynamenode': 50090,
+                         'oozie': 11000},
+                help='Hadoop process map with ports for Vanilla plugin'),
+
+    cfg.DictOpt('process_names',
+                default={'nn': 'namenode',
+                         'tt': 'tasktracker',
+                         'dn': 'datanode'},
+                help='Names for namenode, tasktracker and datanode processes'),
+
+    cfg.BoolOpt('skip_all_tests_for_plugin',
+                default=False,
+                help='If this variable is True then tests for Vanilla plugin '
+                     'will be skipped'),
+
+    cfg.BoolOpt('skip_cluster_config_test', default=False),
+    cfg.BoolOpt('skip_map_reduce_test', default=False),
+    cfg.BoolOpt('skip_swift_test', default=False),
+    cfg.BoolOpt('skip_scaling_test', default=False),
+    cfg.BoolOpt('skip_edp_test', default=False),
+
+]
+
+
+savanna_hdp_group = cfg.OptGroup(name='savanna_hdp',
+                                 title='Savanna project tests for HDP plugin')
+SavannaHDPGroup = [
+
+    cfg.StrOpt('plugin_name',
+               default='hdp', help='Name of plugin'),
+
+    cfg.StrOpt('hadoop_version',
+               default='1.3.2', help='Version of Hadoop'),
+
+    cfg.StrOpt('hadoop_user',
+               default='hdfs',
+               help='Username which is used for access to Hadoop services'),
+
+    cfg.StrOpt('hadoop_directory',
+               default='/usr/lib/hadoop',
+               help='Directory where are located Hadoop jar files'),
+
+    cfg.StrOpt('hadoop_log_directory',
+               default='/hadoop/mapred/userlogs',
+               help='Directory where is located log info about '
+                    'completed jobs'),
+
+    cfg.DictOpt('hadoop_processes_with_ports',
+                default={
+                'JOBTRACKER': 50030,
+                'NAMENODE': 50070,
+                'TASKTRACKER': 50060,
+                'DATANODE': 50075,
+                'SECONDARY_NAMENODE': 50090
+                },
+                help='Hadoop process map with ports for HDP plugin'
+                ),
+
+    cfg.DictOpt('process_names',
+                default={'nn': 'NAMENODE',
+                         'tt': 'TASKTRACKER',
+                         'dn': 'DATANODE'},
+                help='Names for namenode, tasktracker and datanode processes'),
+
+    cfg.BoolOpt('skip_all_tests_for_plugin',
+                default=True,
+                help='If this variable is True then tests for HDP plugin '
+                     'will be skipped'),
+
+    cfg.BoolOpt('skip_map_reduce_test', default=False),
+    cfg.BoolOpt('skip_swift_test', default=False),
+    cfg.BoolOpt('skip_scaling_test', default=False)
+]
+
+
 service_available_group = cfg.OptGroup(name="service_available",
                                        title="Available OpenStack Services")
 
@@ -577,8 +722,11 @@ ServiceAvailableGroup = [
                 default=True,
                 help="Whether or not Horizon is expected to be available"),
     cfg.BoolOpt('murano',
-                default = False,
-                help = "Whether or not murano is expected to be available"),
+                default=False,
+                help="Whether or not murano is expected to be available"),
+    cfg.BoolOpt('savanna',
+                default=False,
+                help="Whether or not savanna is expected to be available"),
 ]
 
 
@@ -646,6 +794,10 @@ class TempestConfig:
         register_opt_group(cfg.CONF, service_available_group,
                            ServiceAvailableGroup)
         register_opt_group(cfg.CONF, debug_group, DebugGroup)
+        register_opt_group(cfg.CONF, savanna_common_group, SavannaCommonGroup)
+        register_opt_group(cfg.CONF, savanna_vanilla_group,
+                           SavannaVanillaGroup)
+        register_opt_group(cfg.CONF, savanna_hdp_group, SavannaHDPGroup)
         self.compute = cfg.CONF.compute
         self.identity = cfg.CONF.identity
         self.images = cfg.CONF.image
@@ -661,6 +813,9 @@ class TempestConfig:
         self.scenario = cfg.CONF.scenario
         self.service_available = cfg.CONF.service_available
         self.debug = cfg.CONF.debug
+        self.savanna_common = cfg.CONF.savanna_common
+        self.savanna_vanilla = cfg.CONF.savanna_vanilla
+        self.savanna_hdp = cfg.CONF.savanna_hdp
         if not self.compute_admin.username:
             self.compute_admin.username = self.identity.admin_username
             self.compute_admin.password = self.identity.admin_password

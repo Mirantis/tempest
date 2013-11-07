@@ -409,6 +409,31 @@ agListnerIP = 10.0.0.155
 # ClusterIP for creating SQL cluster
 clusterIP = 10.0.0.150
 
+[savanna_common]
+# Host for Savanna
+savanna_host = '127.0.0.1'
+# Port for Savanna
+savanna_port = '8386'
+# Api version for Savanna
+savanna_api_version = 'v1.1'
+
+[savanna_vanilla]
+skip_all_tests_for_plugin = False
+
+skip_cluster_config_test = False
+skip_map_reduce_test = False
+skip_swift_test = False
+skip_scaling_test = False
+skip_edp_test = False
+
+[savanna_hdp]
+skip_all_tests_for_plugin = False
+
+skip_map_reduce_test = False
+skip_swift_test = False
+skip_scaling_test = False
+
+
 [cli]
 # Enable cli tests
 enabled = True
@@ -434,6 +459,8 @@ heat = false
 horizon = True
 # Whether or not murano is expected to be available
 murano = false
+# Whether or not savanna is expected to be available
+savanna = false
 
 [stress]
 # Maximum number of instances to create during test

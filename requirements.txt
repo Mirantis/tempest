@@ -13,6 +13,7 @@ python-keystoneclient>=0.3.2
 python-novaclient>=2.15.0
 python-neutronclient>=2.3.0,<3
 python-cinderclient>=1.0.6
+python-savannaclient>=0.3
 python-heatclient>=0.2.3
 testresources>=0.2.4
 keyring>=1.6.1,<2.0
