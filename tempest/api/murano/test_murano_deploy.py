@@ -14,16 +14,17 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import testtools
-from tempest import exceptions
-from tempest.test import attr
-from tempest.api.murano import base
 import time
+
+from tempest.api.murano import base
+from tempest.test import attr
+
 
 class SanityMuranoTest(base.MuranoTest):
 
     def test_create_and_deploying_linux_agent(self):
-        """ Create and deploy Linux Agent
+        """
+        Create and deploy Linux Agent
         Target component: Murano
 
         Scenario:
@@ -36,29 +37,28 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_linux_agent(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])           
+        self.create_linux_agent(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],                        
-                                              envo['deployments'][0]['id'])
-        resp = self.delete_environment(env['id'])
-
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_ad(self):
-        """ Create and deploy AD
+        """
+        Create and deploy AD
         Target component: Murano
 
         Scenario:
@@ -71,24 +71,23 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         inst_id_list = self.search_instances(env['id'], 'ad')
         for i in inst_id_list:
             self.inst_wth_fl_ip.append(i)
@@ -97,11 +96,12 @@ class SanityMuranoTest(base.MuranoTest):
             assert self.socket_check(ip, 3389) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_iis(self):
-        """ Create and deploy IIS
+        """
+        Create and deploy IIS
         Target component: Murano
 
         Scenario:
@@ -114,24 +114,23 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_IIS(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_IIS(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         inst_id_list = self.search_instances(env['id'], 'iis')
         for i in inst_id_list:
             self.inst_wth_fl_ip.append(i)
@@ -141,11 +140,12 @@ class SanityMuranoTest(base.MuranoTest):
             assert self.socket_check(ip, 3389) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet(self):
-        """ Create and deploy apsnet
+        """
+        Create and deploy apsnet
         Target component: Murano
 
         Scenario:
@@ -158,24 +158,23 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_apsnet(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_apsnet(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         inst_id_list = self.search_instances(env['id'], 'asp')
         for i in inst_id_list:
             self.inst_wth_fl_ip.append(i)
@@ -185,11 +184,12 @@ class SanityMuranoTest(base.MuranoTest):
             assert self.socket_check(ip, 3389) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_iis_farm(self):
-        """ Create and deploy IIS farm
+        """
+        Create and deploy IIS farm
         Target component: Murano
 
         Scenario:
@@ -202,29 +202,29 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_IIS_farm(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_IIS_farm(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
-        resp = self.delete_environment(env['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet_farm(self):
-        """ Create and deploy apsnet farm
+        """
+        Create and deploy apsnet farm
         Target component: Murano
 
         Scenario:
@@ -237,29 +237,29 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_apsnet_farm(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_apsnet_farm(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
-        resp = self.delete_environment(env['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_sql(self):
-        """ Create and deploy SQL
+        """
+        Create and deploy SQL
         Target component: Murano
 
         Scenario:
@@ -272,24 +272,23 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_SQL(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_SQL(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert (k > 7 and k <= 120)
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         inst_id_list = self.search_instances(env['id'], 'sql')
         for i in inst_id_list:
             self.inst_wth_fl_ip.append(i)
@@ -299,11 +298,12 @@ class SanityMuranoTest(base.MuranoTest):
             assert self.socket_check(ip, 3389) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='positive')
     def test_create_and_deploying_sql_cluster(self):
-        """ Create and deploy SQL cluster
+        """
+        Create and deploy SQL cluster
         Target component: Murano
 
         Scenario:
@@ -318,17 +318,16 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
-        resp, serv1 = self.create_SQL_cluster(env['id'], sess['id'],
-                                              serv['domain'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        resp, sessinfo = self.get_session_info(env['id'], sess['id'])
+        self.create_SQL_cluster(env['id'], sess['id'], serv['domain'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 180:
                 break
@@ -336,13 +335,13 @@ class SanityMuranoTest(base.MuranoTest):
         resp, envo = self.get_deployments_list(env['id'])
         for i in envo['deployments']:
             assert i['state'] == 'success'
-        resp, infa = self.get_deployment_info(env['id'],
-                                              envo['deployments'][0]['id'])
-        resp = self.delete_environment(env['id'])
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_get_deployments_list_wo_env_id(self):
-        """ Try to get deployments list without env id
+        """
+        Try to get deployments list without env id
         Target component: Murano
 
         Scenario:
@@ -353,13 +352,14 @@ class SanityMuranoTest(base.MuranoTest):
             4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
-        resp, sess = self.create_session(env['id'])
+        self.create_session(env['id'])
         self.assertRaises(Exception, self.get_deployments_list, None)
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_create_service_after_begin_of_deploy(self):
-        """ Try to create service after begin of deploy
+        """
+        Try to create service after begin of deploy
         Target component: Murano
 
         Scenario:
@@ -372,15 +372,15 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
-        self.assertRaises(Exception, self.create_IIS,
-                          env['id'], sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.assertRaises(Exception, self.create_IIS, env['id'], sess['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_delete_service_after_begin_of_deploy(self):
-        """ Try to delete service after begin of deploy
+        """
+        Try to delete service after begin of deploy
         Target component: Murano
 
         Scenario:
@@ -394,14 +394,15 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.delete_service, env['id'],
                           sess['id'], serv['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_deploy_after_delete_environment(self):
-        """ Try to deploy session after deleting environment
+        """
+        Try to deploy session after deleting environment
         Target component: Murano
 
         Scenario:
@@ -413,14 +414,15 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.delete_environment(env['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'],
                           sess['id'])
 
     @attr(type='negative')
     def test_deploy_after_delete_session(self):
-        """ Try to deploy session after deleting this session
+        """
+        Try to deploy session after deleting this session
         Target component: Murano
 
         Scenario:
@@ -433,14 +435,15 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.delete_session(env['id'], sess['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.delete_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'], "")
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_deploy_empty_environment(self):
-        """ Deploy empty environment
+        """
+        Deploy empty environment
         Target component: Murano
 
         Scenario:
@@ -451,23 +454,24 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
         env.update({'status': None})
         k = 0
         while env['status'] != "ready":
             time.sleep(15)
             k += 1
             resp, env = self.get_environment_by_id(env['id'])
-            if not env.has_key('status'):
+            if 'status' not in env:
                 env.update({'status': None})
             if k > 120:
                 break
         assert k < 8
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_deploy_second_session_after_first(self):
-        """ Try to deploy second session after begin of deploy first session
+        """
+        Try to deploy second session after begin of deploy first session
         Target component: Murano
 
         Scenario:
@@ -481,14 +485,15 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         resp, sess1 = self.create_session(env['id'])
         resp, sess2 = self.create_session(env['id'])
-        resp = self.deploy_session(env['id'], sess1['id'])
+        self.deploy_session(env['id'], sess1['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'],
                           sess2['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_deploy_second_session_after_first_with_add_service(self):
-        """ Try to deploy session after deleting this session
+        """
+        Try to deploy session after deleting this session
         Target component: Murano
 
         Scenario:
@@ -502,13 +507,14 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         resp, sess1 = self.create_session(env['id'])
         resp, sess2 = self.create_session(env['id'])
-        resp = self.deploy_session(env['id'], sess1['id'])
+        self.deploy_session(env['id'], sess1['id'])
         self.assertRaises(Exception, self.create_AD, env['id'], sess2['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_deploy_session_wo_env_id(self):
-        """ Try to deploy session without environment id
+        """
+        Try to deploy session without environment id
         Target component: Murano
 
         Scenario:
@@ -520,14 +526,15 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
+        self.create_AD(env['id'], sess['id'])
         self.assertRaises(Exception, self.deploy_session, None,
                           sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
 
     @attr(type='negative')
     def test_get_deployment_info_wo_env_id(self):
-        """ Try to get deployment info without environment id
+        """
+        Try to get deployment info without environment id
         Target component: Murano
 
         Scenario:
@@ -541,10 +548,10 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_AD(env['id'], sess['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
         time.sleep(5)
         resp, envo = self.get_deployments_list(env['id'])
         self.assertRaises(Exception, self.get_deployment_info,
                           None, envo['deployments'][0]['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])

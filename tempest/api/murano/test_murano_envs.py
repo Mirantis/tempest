@@ -14,17 +14,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import testtools
-from tempest import exceptions
-from tempest.test import attr
 from tempest.api.murano import base
-import tempest.config as config
+from tempest.test import attr
+
 
 class SanityMuranoTest(base.MuranoTest):
 
     @attr(type='smoke')
     def test_get_environment(self):
-        """ Get environment by id
+        """
+        Get environment by id
         Test create environment, afterthat test try to get
         environment's info, using environment's id,
         and finally delete this environment
@@ -37,8 +36,8 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        resp, env1 = self.get_environment_by_id(env['id'])
-        resp = self.delete_environment(env['id'])
+        self.get_environment_by_id(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='smoke')
@@ -51,7 +50,7 @@ class SanityMuranoTest(base.MuranoTest):
         Scenario:
         1. Send request to get list of enviroments
         """
-        resp, environments = self.get_list_environments()
+        self.get_list_environments()
 
     @attr(type='smoke')
     def test_update_environment(self):
@@ -67,8 +66,8 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        resp, env1 = self.update_environment(env['id'], env['name'])
-        resp = self.delete_environment(env['id'])
+        self.update_environment(env['id'], env['name'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -86,7 +85,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         self.assertRaises(Exception, self.update_environment, None,
                           env['name'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -105,10 +104,10 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp = self.deploy_session(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.update_environment, None,
                           env['name'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -126,7 +125,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         self.assertRaises(Exception, self.delete_environment,
                           None)
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -142,7 +141,7 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
         self.assertRaises(Exception, self.delete_environment,
                           env['id'])

@@ -14,15 +14,17 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from tempest import exceptions
-from tempest.test import attr
+
 from tempest.api.murano import base
+from tempest.test import attr
+
 
 class SanityMuranoTest(base.MuranoTest):
 
     @attr(type='smoke')
     def test_create_session(self):
-        """ Create session
+        """
+        Create session
         Test create environment, create session
         and delete session
         Target component: Murano
@@ -34,8 +36,8 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        resp, sess = self.create_session(env['id'])
-        resp = self.delete_environment(env['id'])
+        self.create_session(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -66,7 +68,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.assertRaises(Exception, self.delete_session, None, sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -84,7 +86,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         self.assertRaises(Exception, self.create_session,
                           None)
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -104,7 +106,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, sess = self.create_session(env['id'])
         self.assertRaises(Exception, self.get_session_info,
                           None, sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -112,8 +114,8 @@ class SanityMuranoTest(base.MuranoTest):
         """
         Try to get session info after delete current environment
         Target component: Murano
-        
-        Scenario:         
+
+        Scenario:
         1. Send request to create environment
         2. Send request to create session
         3. Send request to delete environment
@@ -122,14 +124,15 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
         self.assertRaises(Exception, self.get_session_info,
                           env['id'], sess['id'])
 
     @attr(type='smoke')
     def test_get_session_info(self):
-        """ Create session
+        """
+        Create session
         Test create environment, create session, get info about this session
         and delete session
         Target component: Murano
@@ -140,17 +143,17 @@ class SanityMuranoTest(base.MuranoTest):
             3. Send request to get info about created session
             4. Send request to delete environment
         """
-
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp, sess_info = self.get_session_info(env['id'], sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.get_session_info(env['id'], sess['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='smoke')
     def test_delete_session(self):
-        """ Create session
+        """
+        Create session
         Test create environment, create session, delete created session
         and delete session
         Target component: Murano
@@ -164,8 +167,8 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp = self.delete_session(env['id'], sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_session(env['id'], sess['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
@@ -173,8 +176,8 @@ class SanityMuranoTest(base.MuranoTest):
         """
         Try to double delete session
         Target component: Murano
-        
-        Scenario:         
+
+        Scenario:
         1. Send request to create environment
         2. Send request to create session
         3. Send request to delete session
@@ -184,8 +187,8 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp = self.delete_session(env['id'], sess['id'])
+        self.delete_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.delete_session, env['id'],
                           sess['id'])
-        resp = self.delete_environment(env['id'])
+        self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
