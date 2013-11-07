@@ -175,8 +175,7 @@ class BaseSavannaTest(tempest.test.BaseTestCase):
         for image in images:
 
             try:
-                if image['metadata']['_savanna_username'] and \
-                        image['metadata']['_savanna_tag_ci']:
+                if image['metadata']['_savanna_username']:
 
                     if not vanilla_skip:
 
