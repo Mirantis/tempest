@@ -56,6 +56,11 @@ class SanityMuranoTest(base.MuranoMeta):
         assert body is not None
         assert resp['status'] == '200'
 
+    @attr(type='negative')
+    def test_get_list_metadata_objects_uncorrect_type(self):
+        self.assertRaises(Exception, self.get_list_metadata_objects,
+                          "someth")
+
     @attr(type='smoke')
     def test_get_ui_definitions(self):
         resp, body = self.get_ui_definitions()
@@ -102,6 +107,24 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("scripts/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+
+    @attr(type='negative')
+    def test_create_directory_uncorrect_type(self):
+        self.assertRaises(Exception, self.create_directory,
+                          "someth/", "testdir")
+
+    @testtools.skip('It is look as a bug')
+    @attr(type='negative')
+    def test_double_create_directory(self):
+        self.create_directory("workflows/", "testdir")
+        self.assertRaises(Exception, self.create_directory,
+                          "workflows/", "testdir")
+        self.delete_metadata_obj_or_folder("workflows/testdir")
+
+    @attr(type='negative')
+    def test_delete_nonexistent_object(self):
+        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
+                          "somth/", "blabla")
 
     @attr(type='smoke')
     def test_upload_file_and_delete_workflows(self):
