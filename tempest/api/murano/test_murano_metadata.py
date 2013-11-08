@@ -49,6 +49,7 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("scripts")
         assert body is not None
         assert resp['status'] == '200'
+
     @attr(type='smoke')
     def test_get_list_metadata_objects_manifests(self):
         resp, body = self.get_list_metadata_objects("manifests")
