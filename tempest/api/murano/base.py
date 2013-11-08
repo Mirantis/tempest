@@ -17,7 +17,7 @@
 
 import json
 import socket
-
+import requests
 import novaclient.v1_1.client as nvclient
 
 from tempest.common import rest_client
@@ -516,3 +516,56 @@ class MuranoTest(tempest.test.BaseTestCase):
                                      '/deployments/' + str(deployment_id),
                                      self.client.headers)
         return resp, json.loads(body)
+
+class MuranoMeta(tempest.test.BaseTestCase):
+
+    def setUp(self):
+
+        super(MuranoMeta, self).setUp()
+        if not config.TempestConfig().service_available.murano:
+            raise self.skipException("Murano tests is disabled")
+        _config = config.TempestConfig()
+        user = self.config.identity.admin_username
+        password = self.config.identity.admin_password
+        tenant = self.config.identity.admin_tenant_name
+        auth_url = self.config.identity.uri
+        client_args = (_config, user, password, auth_url, tenant)
+        self.client = rest_client.RestClient(*client_args)
+        self.client.service = 'identity'
+        self.token = self.client.get_auth()
+        self.client.base_url = self.config.murano.murano_metadata
+
+    def get_ui_definitions(self):
+        resp, body = self.client.get('v1/client/ui', self.client.headers)
+        return resp, body
+
+    def get_conductor_metadata(self):
+        resp, body = self.client.get('v1/client/conductor', self.client.headers)
+        return resp, body
+
+    def get_list_metadata_objects(self, path):
+        resp, body = self.client.get('v1/admin/' + path, self.client.headers)
+        return resp, body
+
+    def get_metadata_object(self, object):
+        resp, body = self.client.get('v1/admin/' + object, self.client.headers)
+        return resp, body
+
+    def upload_metadata_object(self, object, path):
+        files = {'file': open(object, 'rb')}
+        headers = {'X-Auth-Token': self.token}
+        resp = requests.post('http://172.18.78.92:8084/v1/admin/%s' %path,
+                             files=files,
+                             headers=headers)
+        return resp
+
+    def create_directory(self, path, name):
+        post_body = '{}'
+        resp, body = self.client.put('v1/admin/' + path + name, post_body,
+                                      self.client.headers)
+        return resp, body
+
+    def delete_metadata_obj_or_folder(self, object):
+        resp, body = self.client.delete('v1/admin/' + object,
+                                        self.client.headers)
+        return resp, body

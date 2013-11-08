@@ -404,6 +404,8 @@ large_ops_number = 0
 [murano]
 # Murano endpoint
 murano_url = http://127.0.0.1:8082
+#Murano metadata repository
+murano_metadata = http://127.0.0.1:8084/
 # AglistnerIP for creating SQL cluster
 agListnerIP = 10.0.0.155
 # ClusterIP for creating SQL cluster
