@@ -15,6 +15,7 @@
 # under the License.
 
 import testtools
+import time
 from tempest.test import attr
 from tempest.api.murano import base
 
@@ -139,16 +140,15 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='negative')
     def test_double_upload_file(self):
         self.upload_metadata_object("testfile.txt", "workflows")
-        self.assertRaises(Exception, self.upload_metadata_object,
-                          "testfile.txt", "workflows")
+        time.sleep(3)
+        resp = self.upload_metadata_object("testfile.txt", "workflows")
+        assert resp.status_code == 403
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
 
     @attr(type='negative')
     def test_upload_file_uncorrect(self):
-        self.upload_metadata_object("testfile.txt", "workflows")
-        self.assertRaises(Exception, self.upload_metadata_object,
-                          "testfile.txt", "workflows/testfile.txt")
-        self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        resp = self.upload_metadata_object("testfile.txt", "workflows/testfil")
+        assert resp.status_code == 404
 
     @attr(type='smoke')
     def test_upload_file_and_delete_workflows(self):
