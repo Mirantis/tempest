@@ -218,7 +218,7 @@ class SanityMuranoTest(base.MuranoMeta):
         self.assertRaises(Exception, self.get_metadata_object,
                           "somth/blabla")
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='smoke')
     def test_create_directory_and_upload_file_workflows(self):
         self.create_directory("workflows/", "testdir")
@@ -234,7 +234,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp1['status'] == '200'
         assert ('testfile.txt' not in body1)
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='smoke')
     def test_create_directory_and_upload_file_ui(self):
         self.create_directory("ui/", "testdir")
@@ -249,7 +249,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp1['status'] == '200'
         assert ('testfile.txt' not in body1)
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='smoke')
     def test_create_directory_and_upload_file_heat(self):
         self.create_directory("heat/", "testdir")
@@ -264,7 +264,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp1['status'] == '200'
         assert ('testfile.txt' not in body1)
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='smoke')
     def test_create_directory_and_upload_file_agent(self):
         self.create_directory("agent/", "testdir")
@@ -279,7 +279,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp1['status'] == '200'
         assert ('testfile.txt' not in body1)
 
-    @testtools.skip('It is look as a bug')
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='smoke')
     def test_create_directory_and_upload_file_scripts(self):
         self.create_directory("scripts/", "testdir")
