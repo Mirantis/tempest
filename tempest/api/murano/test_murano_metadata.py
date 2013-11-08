@@ -171,7 +171,7 @@ class SanityMuranoTest(base.MuranoMeta):
     def test_create_directory_and_upload_file_workflows(self):
         self.create_directory("workflows/", "testdir")
         resp = self.upload_metadata_object("testfile.txt",
-                                            "workflows/testdir")
+                                           "workflows/testdir")
         resp1, body1 = self.get_list_metadata_objects("workflows/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("workflows/testdir")
         assert resp.status_code == 200
