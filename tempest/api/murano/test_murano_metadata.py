@@ -15,10 +15,8 @@
 # under the License.
 
 import testtools
-from tempest import exceptions
 from tempest.test import attr
 from tempest.api.murano import base
-import tempest.config as config
 
 class SanityMuranoTest(base.MuranoMeta):
 
@@ -86,10 +84,57 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
 
-    def test_upload_file_and_delete(self):
+    def test_create_directory_and_delete_scripts(self):
+        resp, body = self.create_directory("scripts/", "testdir")
+        resp1, body1 = self.delete_metadata_obj_or_folder("scripts/testdir")
+        assert resp['status'] == '200'
+        assert resp1['status'] == '200'
+
+    def test_upload_file_and_delete_workflows(self):
         resp = self.upload_metadata_object("testfile.txt", "workflows")
         resp1, body1 = self.get_list_metadata_objects("workflows")
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+
+    def test_upload_file_and_delete_ui(self):
+        resp = self.upload_metadata_object("testfile.txt", "ui")
+        resp1, body1 = self.get_list_metadata_objects("ui")
+        self.delete_metadata_obj_or_folder("ui/testfile.txt")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+
+    def test_upload_file_and_delete_heat(self):
+        resp = self.upload_metadata_object("testfile.txt", "heat")
+        resp1, body1 = self.get_list_metadata_objects("heat")
+        self.delete_metadata_obj_or_folder("heat/testfile.txt")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+
+    def test_upload_file_and_delete_agent(self):
+        resp = self.upload_metadata_object("testfile.txt", "agent")
+        resp1, body1 = self.get_list_metadata_objects("agent")
+        self.delete_metadata_obj_or_folder("agent/testfile.txt")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+
+    def test_upload_file_and_delete_scripts(self):
+        resp = self.upload_metadata_object("testfile.txt", "scripts")
+        resp1, body1 = self.get_list_metadata_objects("scripts")
+        self.delete_metadata_obj_or_folder("scripts/testfile.txt")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+
+    @testtools.skip('It is look as a bug')
+    def test_upload_file_and_delete_manifests(self):
+        resp = self.upload_metadata_object("testfile.txt", "manifests")
+        resp1, body1 = self.get_list_metadata_objects("manifests")
+        self.delete_metadata_obj_or_folder("manifests/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
@@ -100,3 +145,74 @@ class SanityMuranoTest(base.MuranoMeta):
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
         assert resp1['status'] == '200'
         assert body1 is not None
+
+    @testtools.skip('It is look as a bug')
+    def test_create_directory_and_upload_file_workflows(self):
+        self.create_directory("workflows/", "testdir")
+        resp = self.upload_metadata_object("testfile.txt",
+                                            "workflows/testdir")
+        resp1, body1 = self.get_list_metadata_objects("workflows/testdir")
+        resp2, body2 = self.delete_metadata_obj_or_folder("workflows/testdir")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+        assert resp2['status'] == '200'
+        resp1, body1 = self.get_list_metadata_objects("workflows")
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' not in body1)
+
+    @testtools.skip('It is look as a bug')
+    def test_create_directory_and_upload_file_ui(self):
+        self.create_directory("ui/", "testdir")
+        resp = self.upload_metadata_object("testfile.txt", "ui/testdir")
+        resp1, body1 = self.get_list_metadata_objects("ui/testdir")
+        resp2, body2 = self.delete_metadata_obj_or_folder("ui/testdir")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+        assert resp2['status'] == '200'
+        resp1, body1 = self.get_list_metadata_objects("ui")
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' not in body1)
+
+    @testtools.skip('It is look as a bug')
+    def test_create_directory_and_upload_file_heat(self):
+        self.create_directory("heat/", "testdir")
+        resp = self.upload_metadata_object("testfile.txt", "heat/testdir")
+        resp1, body1 = self.get_list_metadata_objects("heat/testdir")
+        resp2, body2 = self.delete_metadata_obj_or_folder("heat/testdir")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+        assert resp2['status'] == '200'
+        resp1, body1 = self.get_list_metadata_objects("heat")
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' not in body1)
+
+    @testtools.skip('It is look as a bug')
+    def test_create_directory_and_upload_file_agent(self):
+        self.create_directory("agent/", "testdir")
+        resp = self.upload_metadata_object("testfile.txt", "agent/testdir")
+        resp1, body1 = self.get_list_metadata_objects("agent/testdir")
+        resp2, body2 = self.delete_metadata_obj_or_folder("agent/testdir")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+        assert resp2['status'] == '200'
+        resp1, body1 = self.get_list_metadata_objects("agent")
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' not in body1)
+
+    @testtools.skip('It is look as a bug')
+    def test_create_directory_and_upload_file_scripts(self):
+        self.create_directory("scripts/", "testdir")
+        resp = self.upload_metadata_object("testfile.txt", "scripts/testdir")
+        resp1, body1 = self.get_list_metadata_objects("scripts/testdir")
+        resp2, body2 = self.delete_metadata_obj_or_folder("scripts/testdir")
+        assert resp.status_code == 200
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' in body1)
+        assert resp2['status'] == '200'
+        resp1, body1 = self.get_list_metadata_objects("scripts")
+        assert resp1['status'] == '200'
+        assert ('testfile.txt' not in body1)
