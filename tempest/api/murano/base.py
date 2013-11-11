@@ -27,32 +27,31 @@ import tempest.test
 
 class MuranoTest(tempest.test.BaseTestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """
             This method allows to initialize authentication before
             each test case and define parameters of Murano API Service
             This method also create environment for all tests
         """
 
-        super(MuranoTest, self).setUp()
+        super(MuranoTest, cls).setUpClass()
 
         if not config.TempestConfig().service_available.murano:
-            raise self.skipException("Murano tests is disabled")
+            raise cls.skipException("Murano tests is disabled")
         _config = config.TempestConfig()
-        user = self.config.identity.admin_username
-        password = self.config.identity.admin_password
-        tenant = self.config.identity.admin_tenant_name
-        auth_url = self.config.identity.uri
+        user = _config.identity.admin_username
+        password = _config.identity.admin_password
+        tenant = _config.identity.admin_tenant_name
+        auth_url = _config.identity.uri
         client_args = (_config, user, password, auth_url, tenant)
 
-        self.client = rest_client.RestClient(*client_args)
-        self.client.service = 'identity'
-        self.token = self.client.get_auth()
-        self.client.base_url = self.config.murano.murano_url
-
-        response, environment = self.create_environment('test455444')
-        self.environments = [environment, ]
-        self.inst_wth_fl_ip = []
+        cls.client = rest_client.RestClient(*client_args)
+        cls.client.service = 'identity'
+        cls.token = cls.client.get_auth()
+        cls.client.base_url = _config.murano.murano_url
+        cls.environments = []
+        cls.inst_wth_fl_ip = []
 
     def tearDown(self):
         """
