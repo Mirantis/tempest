@@ -19,9 +19,10 @@ import json
 import socket
 import requests
 import novaclient.v1_1.client as nvclient
-
-from tempest.common import rest_client
 import tempest.test
+from tempest import clients
+from tempest.common import rest_client
+from tempest.services.image.v1.json.image_client import ImageClientJSON
 
 
 class MuranoTest(tempest.test.BaseTestCase):
@@ -50,6 +51,15 @@ class MuranoTest(tempest.test.BaseTestCase):
         cls.client.base_url = cls.config.murano.murano_url
         cls.environments = []
         cls.inst_wth_fl_ip = []
+        image_cl = ImageClientJSON(cls.config, user, password, auth_url,
+                                   tenant)
+        resp, body = image_cl.image_list_detail()
+        for i in body:
+            if 'murano_image_info' in i['properties']:
+                if 'linux' in i['properties']['murano_image_info']:
+                    cls.linux = i['name']
+                elif 'windows' in i['properties']['murano_image_info']:
+                    cls.windows = i['name']
 
     def tearDown(self):
         """
@@ -224,7 +234,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "availabilityZone": "nova",
                      "unitNamingPattern": "adinstance",
                      "flavor": "m1.medium", "osImage":
-                     {"type": "ws-2012-std", "name": "ws-2012-std", "title":
+                     {"type": "ws-2012-std", "name": self.windows, "title":
                      "Windows Server 2012 Standard"}, "configuration":
                      "standalone", "units": [{"isMaster": True,
                      "recoveryPassword": "P@ssw0rd",
@@ -252,7 +262,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "availabilityZone": "nova", "name": iis_name,
                      "adminPassword": "P@ssw0rd",
                      "unitNamingPattern": "iisinstance",
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"},
                      "units": [{}], "credentials": creds,
                      "flavor": "m1.medium"}
@@ -279,7 +289,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "git://github.com/Mirantis/murano-mvc-demo.git",
                      "adminPassword": "P@ssw0rd",
                      "unitNamingPattern": "aspnetinstance",
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"},
                      "units": [{}], "credentials": creds,
                      "flavor": "m1.medium"}
@@ -303,7 +313,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "availabilityZone": "nova", "name": "someIISFARM",
                      "adminPassword": "P@ssw0rd", "loadBalancerPort": 80,
                      "unitNamingPattern": "",
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"},
                      "units": [{}, {}],
                      "credentials": creds, "flavor": "m1.medium"}
@@ -329,7 +339,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                              "git://github.com/Mirantis/murano-mvc-demo.git",
                      "adminPassword": "P@ssw0rd", "loadBalancerPort": 80,
                      "unitNamingPattern": "",
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"},
                      "units": [{}, {}],
                      "credentials": creds, "flavor": "m1.medium"}
@@ -353,7 +363,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "adminPassword": "P@ssw0rd",
                      "unitNamingPattern": "sqlinstance",
                      "saPassword": "P@ssw0rd", "mixedModeAuth": True,
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"}, "units": [{}],
                      "credentials": {"username": "Administrator",
                      "password": "P@ssw0rd"}, "flavor": "m1.medium"}
@@ -378,7 +388,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                      "externalAD": False,
                      "sqlServiceUserName": "Administrator",
                      "sqlServicePassword": "P@ssw0rd",
-                     "osImage": {"type": "ws-2012-std", "name": "ws-2012-std",
+                     "osImage": {"type": "ws-2012-std", "name": self.windows,
                      "title": "Windows Server 2012 Standard"},
                      "agListenerName": "SomeSQL_AGListner",
                      "flavor": "m1.medium",
@@ -405,7 +415,7 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = {'availabilityZone': 'nova', 'name': 'Linux_agent',
                      'deployTelnet': True, 'unitNamingPattern': '',
                      'osImage': {'type': 'linux',
-                     'name': 'F18-x86_64-cfntools-MURANO',
+                     'name': self.linux,
                      'title': 'Linux with vNext agent'}, 'units': [{}],
                      'flavor': 'm1.medium', 'type': 'linuxTelnetService'}
         post_body = json.dumps(post_body)
