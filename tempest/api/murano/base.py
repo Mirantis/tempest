@@ -21,7 +21,6 @@ import requests
 import novaclient.v1_1.client as nvclient
 
 from tempest.common import rest_client
-from tempest import config
 import tempest.test
 
 
@@ -37,19 +36,18 @@ class MuranoTest(tempest.test.BaseTestCase):
 
         super(MuranoTest, cls).setUpClass()
 
-        if not config.TempestConfig().service_available.murano:
+        if not cls.config.service_available.murano:
             raise cls.skipException("Murano tests is disabled")
-        _config = config.TempestConfig()
-        user = _config.identity.admin_username
-        password = _config.identity.admin_password
-        tenant = _config.identity.admin_tenant_name
-        auth_url = _config.identity.uri
-        client_args = (_config, user, password, auth_url, tenant)
+        user = cls.config.identity.admin_username
+        password = cls.config.identity.admin_password
+        tenant = cls.config.identity.admin_tenant_name
+        auth_url = cls.config.identity.uri
+        client_args = (cls.config, user, password, auth_url, tenant)
 
         cls.client = rest_client.RestClient(*client_args)
         cls.client.service = 'identity'
         cls.token = cls.client.get_auth()
-        cls.client.base_url = _config.murano.murano_url
+        cls.client.base_url = cls.config.murano.murano_url
         cls.environments = []
         cls.inst_wth_fl_ip = []
 
