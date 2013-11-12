@@ -526,21 +526,21 @@ class MuranoTest(tempest.test.BaseTestCase):
 
 class MuranoMeta(tempest.test.BaseTestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
 
-        super(MuranoMeta, self).setUp()
-        if not config.TempestConfig().service_available.murano:
-            raise self.skipException("Murano tests is disabled")
-        _config = config.TempestConfig()
-        user = self.config.identity.admin_username
-        password = self.config.identity.admin_password
-        tenant = self.config.identity.admin_tenant_name
-        auth_url = self.config.identity.uri
-        client_args = (_config, user, password, auth_url, tenant)
-        self.client = rest_client.RestClient(*client_args)
-        self.client.service = 'identity'
-        self.token = self.client.get_auth()
-        self.client.base_url = self.config.murano.murano_metadata
+        super(MuranoMeta, cls).setUpClass()
+        if not cls.config.service_available.murano:
+            raise cls.skipException("Murano tests is disabled")
+        user = cls.config.identity.admin_username
+        password = cls.config.identity.admin_password
+        tenant = cls.config.identity.admin_tenant_name
+        auth_url = cls.config.identity.uri
+        client_args = (cls.config, user, password, auth_url, tenant)
+        cls.client = rest_client.RestClient(*client_args)
+        cls.client.service = 'identity'
+        cls.token = self.client.get_auth()
+        cls.client.base_url = self.config.murano.murano_metadata
 
     def get_ui_definitions(self):
         resp, body = self.client.get('v1/client/ui', self.client.headers)
