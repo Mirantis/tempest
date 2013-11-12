@@ -18,6 +18,7 @@
 import json
 import socket
 import requests
+import os
 import novaclient.v1_1.client as nvclient
 import tempest.test
 from tempest import clients
@@ -558,11 +559,14 @@ class MuranoMeta(tempest.test.BaseTestCase):
         resp, body = self.client.get('v1/admin/' + object, self.client.headers)
         return resp, body
 
-    def upload_metadata_object(self, path, object=__file__):
-        files = {'file': open(object, 'rb')}
+    def upload_metadata_object(self, path):
+        with open('testfile.txt', 'w') as f:
+            f.write("It's a test file")
+        files = {'file': open('testfile.txt', 'rb')}
         headers = {'X-Auth-Token': self.token}
         resp = requests.post('%s/v1/admin/%s' % (self.client.base_url, path),
                              files=files, headers=headers)
+        os.remove('testfile.txt')
         return resp
 
     def create_directory(self, path, name):
