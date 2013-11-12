@@ -539,8 +539,8 @@ class MuranoMeta(tempest.test.BaseTestCase):
         client_args = (cls.config, user, password, auth_url, tenant)
         cls.client = rest_client.RestClient(*client_args)
         cls.client.service = 'identity'
-        cls.token = self.client.get_auth()
-        cls.client.base_url = self.config.murano.murano_metadata
+        cls.token = cls.client.get_auth()
+        cls.client.base_url = cls.config.murano.murano_metadata
 
     def get_ui_definitions(self):
         resp, body = self.client.get('v1/client/ui', self.client.headers)
