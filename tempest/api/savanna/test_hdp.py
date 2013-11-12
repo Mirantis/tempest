@@ -38,7 +38,7 @@ class HDPGatingTest(map_reduce.MapReduceTest, swift.SwiftTest,
             raise cls.skipException(
                 'All tempest tests for HDP plugin were skipped')
 
-    @attrib.attr(tags='slow')
+    @attrib.attr(type='slow')
     def test_hdp_plugin_slow(self):
 
         node_group_template_id_list = []

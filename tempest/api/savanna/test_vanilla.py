@@ -45,7 +45,7 @@ class VanillaGatingTest(cluster_configs.ClusterConfigTest,
             raise cls.skipException(
                 'All tempest tests for Vanilla plugin were skipped')
 
-    @attrib.attr(tags='slow')
+    @attrib.attr(type='slow')
     def test_vanilla_plugin_slow(self):
 
         node_group_template_id_list = []
@@ -407,7 +407,7 @@ class VanillaGatingTest(cluster_configs.ClusterConfigTest,
             node_group_template_id_list
         )
 
-    @attrib.attr(tags='smoke')
+    @attrib.attr(type='smoke')
     def test_vanilla_plugin_smoke(self):
 
         node_group_template_id_list = []
