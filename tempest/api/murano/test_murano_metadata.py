@@ -138,57 +138,57 @@ class SanityMuranoTest(base.MuranoMeta):
 
     @attr(type='negative')
     def test_double_upload_file(self):
-        self.upload_metadata_object("testfile.txt", "workflows")
-        resp = self.upload_metadata_object("testfile.txt", "workflows")
+        self.upload_metadata_object(path="workflows")
+        resp = self.upload_metadata_object(path="workflows")
         assert resp.status_code == 403
-        self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        self.delete_metadata_obj_or_folder("workflows/base.py")
 
     @attr(type='negative')
     def test_upload_file_uncorrect(self):
-        resp = self.upload_metadata_object("testfile.txt", "workflows/testfil")
+        resp = self.upload_metadata_object(path="workflows/testfil")
         assert resp.status_code == 404
 
     @attr(type='smoke')
     def test_upload_file_and_delete_workflows(self):
-        resp = self.upload_metadata_object("testfile.txt", "workflows")
+        resp = self.upload_metadata_object(path="workflows")
         resp1, body1 = self.get_list_metadata_objects("workflows")
-        self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        self.delete_metadata_obj_or_folder("workflows/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
     def test_upload_file_and_delete_ui(self):
-        resp = self.upload_metadata_object("testfile.txt", "ui")
+        resp = self.upload_metadata_object(path="ui")
         resp1, body1 = self.get_list_metadata_objects("ui")
-        self.delete_metadata_obj_or_folder("ui/testfile.txt")
+        self.delete_metadata_obj_or_folder("ui/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
     def test_upload_file_and_delete_heat(self):
-        resp = self.upload_metadata_object("testfile.txt", "heat")
+        resp = self.upload_metadata_object(path="heat")
         resp1, body1 = self.get_list_metadata_objects("heat")
-        self.delete_metadata_obj_or_folder("heat/testfile.txt")
+        self.delete_metadata_obj_or_folder("heat/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
     def test_upload_file_and_delete_agent(self):
-        resp = self.upload_metadata_object("testfile.txt", "agent")
+        resp = self.upload_metadata_object(path="agent")
         resp1, body1 = self.get_list_metadata_objects("agent")
-        self.delete_metadata_obj_or_folder("agent/testfile.txt")
+        self.delete_metadata_obj_or_folder("agent/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
     def test_upload_file_and_delete_scripts(self):
-        resp = self.upload_metadata_object("testfile.txt", "scripts")
+        resp = self.upload_metadata_object(path="scripts")
         resp1, body1 = self.get_list_metadata_objects("scripts")
-        self.delete_metadata_obj_or_folder("scripts/testfile.txt")
+        self.delete_metadata_obj_or_folder("scripts/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
@@ -196,18 +196,18 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     @testtools.skip('It is look as a bug')
     def test_upload_file_and_delete_manifests(self):
-        resp = self.upload_metadata_object("testfile.txt", "manifests")
+        resp = self.upload_metadata_object(path="manifests")
         resp1, body1 = self.get_list_metadata_objects("manifests")
-        self.delete_metadata_obj_or_folder("manifests/testfile.txt")
+        self.delete_metadata_obj_or_folder("manifests/base.py")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
     def test_get_metadata_object(self):
-        self.upload_metadata_object("testfile.txt", "workflows")
-        resp1, body1 = self.get_metadata_object("workflows/testfile.txt")
-        self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        self.upload_metadata_object(path="workflows")
+        resp1, body1 = self.get_metadata_object("workflows/base.py")
+        self.delete_metadata_obj_or_folder("workflows/base.py")
         assert resp1['status'] == '200'
         assert body1 is not None
 
@@ -220,8 +220,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_upload_file_workflows(self):
         self.create_directory("workflows/", "testdir")
-        resp = self.upload_metadata_object("testfile.txt",
-                                           "workflows/testdir")
+        resp = self.upload_metadata_object(path="workflows/testdir")
         resp1, body1 = self.get_list_metadata_objects("workflows/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("workflows/testdir")
         assert resp.status_code == 200
@@ -236,7 +235,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_upload_file_ui(self):
         self.create_directory("ui/", "testdir")
-        resp = self.upload_metadata_object("testfile.txt", "ui/testdir")
+        resp = self.upload_metadata_object(path="ui/testdir")
         resp1, body1 = self.get_list_metadata_objects("ui/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("ui/testdir")
         assert resp.status_code == 200
@@ -251,7 +250,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_upload_file_heat(self):
         self.create_directory("heat/", "testdir")
-        resp = self.upload_metadata_object("testfile.txt", "heat/testdir")
+        resp = self.upload_metadata_object(path="heat/testdir")
         resp1, body1 = self.get_list_metadata_objects("heat/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("heat/testdir")
         assert resp.status_code == 200
@@ -266,7 +265,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_upload_file_agent(self):
         self.create_directory("agent/", "testdir")
-        resp = self.upload_metadata_object("testfile.txt", "agent/testdir")
+        resp = self.upload_metadata_object(path="agent/testdir")
         resp1, body1 = self.get_list_metadata_objects("agent/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("agent/testdir")
         assert resp.status_code == 200
@@ -281,7 +280,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_upload_file_scripts(self):
         self.create_directory("scripts/", "testdir")
-        resp = self.upload_metadata_object("testfile.txt", "scripts/testdir")
+        resp = self.upload_metadata_object(path="scripts/testdir")
         resp1, body1 = self.get_list_metadata_objects("scripts/testdir")
         resp2, body2 = self.delete_metadata_obj_or_folder("scripts/testdir")
         assert resp.status_code == 200

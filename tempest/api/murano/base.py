@@ -558,7 +558,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
         resp, body = self.client.get('v1/admin/' + object, self.client.headers)
         return resp, body
 
-    def upload_metadata_object(self, object, path):
+    def upload_metadata_object(self, path, object=__file__):
         files = {'file': open(object, 'rb')}
         headers = {'X-Auth-Token': self.token}
         resp = requests.post('%s/v1/admin/%s' % (self.client.base_url, path),
