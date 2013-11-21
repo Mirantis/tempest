@@ -290,3 +290,19 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.get_list_metadata_objects("scripts")
         assert resp1['status'] == '200'
         assert ('testfile.txt' not in body1)
+
+    @attr(type='smoke')
+    def test_create_and_delete_new_service(self):
+        resp, body = self.create_new_service('test')
+        assert resp['status'] == '200'
+        assert 'success' in body
+        resp, body = self.delete_service('test')
+        assert resp['status'] == '200'
+        assert 'success' in body
+
+    def test_update_created_service(self):
+        self.create_new_service('test')
+        resp, body = self.update_new_service('test')
+        assert resp['status'] == '200'
+        assert 'success' in body
+        self.delete_service('test1')
