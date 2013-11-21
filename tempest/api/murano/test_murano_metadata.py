@@ -300,6 +300,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp['status'] == '200'
         assert 'success' in body
 
+    @attr(type='smoke')
     def test_update_created_service(self):
         self.create_new_service('test')
         resp, body = self.update_new_service('test')

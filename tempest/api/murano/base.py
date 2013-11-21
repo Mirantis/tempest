@@ -583,16 +583,16 @@ class MuranoMeta(tempest.test.BaseTestCase):
     def create_new_service(self, name):
         post_body = { "name": name,"version": "0.1",
                       "full_service_name": name,
-                      "service_display_name" : name}
+                      "service_display_name": name}
         post_body = json.dumps(post_body)
         resp, body = self.client.put('v1/admin/services/create', post_body,
                                      self.client.headers)
         return resp, body
 
     def update_new_service(self, name):
-        post_body = { "name": name + "1","version": "0.1",
+        post_body = { "name": name + "1", "version": "0.1",
                       "full_service_name": name + "1",
-                      "service_display_name" : name + "1"}
+                      "service_display_name": name + "1"}
         post_body = json.dumps(post_body)
         resp, body = self.client.post('v1/admin/services/' + name, post_body,
                                       self.client.headers)
