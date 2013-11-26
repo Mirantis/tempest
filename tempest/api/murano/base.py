@@ -591,7 +591,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
 
     def update_new_service(self, name):
         post_body = { "name": name + "1", "version": "0.1",
-                      "full_service_name": name + "1",
+                      "full_service_name": name,
                       "service_display_name": name + "1"}
         post_body = json.dumps(post_body)
         resp, body = self.client.put('v1/admin/services/' + name,

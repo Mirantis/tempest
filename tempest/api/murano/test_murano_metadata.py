@@ -306,4 +306,4 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.update_new_service('test')
         assert resp['status'] == '200'
         assert 'success' in body
-        self.delete_service('test1')
+        self.delete_service('test')
