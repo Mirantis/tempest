@@ -585,7 +585,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
                       "full_service_name": name,
                       "service_display_name": name}
         post_body = json.dumps(post_body)
-        resp, body = self.client.put('v1/admin/services/create', post_body,
+        resp, body = self.client.put('v1/admin/services/' + name, post_body,
                                      self.client.headers)
         return resp, body
 
