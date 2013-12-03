@@ -61,7 +61,6 @@ class MuranoTest(tempest.test.BaseTestCase):
                     cls.linux = i['name']
                 elif 'windows' in i['properties']['murano_image_info']:
                     cls.windows = i['name']
-        print cls.windows, cls.linux
 
     def tearDown(self):
         """
