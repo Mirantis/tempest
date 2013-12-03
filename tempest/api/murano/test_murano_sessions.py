@@ -36,7 +36,11 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        self.create_session(env['id'])
+        resp, sess = self.create_session(env['id'])
+        assert resp['status'] == '200'
+        resp, infa = self.get_session_info(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert infa['environment_id'] == env['id']
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
@@ -146,7 +150,9 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.get_session_info(env['id'], sess['id'])
+        resp, infa = self.get_session_info(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert infa['environment_id'] == env['id']
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 

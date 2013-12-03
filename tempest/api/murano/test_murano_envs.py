@@ -21,6 +21,17 @@ from tempest.test import attr
 class SanityMuranoTest(base.MuranoTest):
 
     @attr(type='smoke')
+    def test_create_and_delete_environment(self):
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        assert resp['status'] == '200'
+        resp, infa = self.get_environment_by_id(env['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'test'
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='smoke')
     def test_get_environment(self):
         """
         Get environment by id
@@ -36,7 +47,9 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        self.get_environment_by_id(env['id'])
+        resp, infa = self.get_environment_by_id(env['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'test'
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
@@ -50,7 +63,13 @@ class SanityMuranoTest(base.MuranoTest):
         Scenario:
         1. Send request to get list of enviroments
         """
-        self.get_list_environments()
+        _, env1 = self.create_environment('test1')
+        self.environments.append(env1)
+        resp, infa = self.get_list_environments()
+        assert resp['status'] == '200'
+        assert len(infa['environments']) == 1
+        self.delete_environment(env1['id'])
+        self.environments.pop(self.environments.index(env1))
 
     @attr(type='smoke')
     def test_update_environment(self):
@@ -66,7 +85,9 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        self.update_environment(env['id'], env['name'])
+        resp, infa = self.update_environment(env['id'], env['name'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'test-changed'
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 

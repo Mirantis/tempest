@@ -39,6 +39,12 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'ad.local'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -146,6 +152,12 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'IISSERVICE'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -253,6 +265,9 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -360,6 +375,12 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS_farm(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'someIISFARM'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -467,6 +488,12 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet_farm(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'SomeApsFarm'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -574,6 +601,12 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_SQL(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'SQLSERVER'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
