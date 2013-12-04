@@ -555,3 +555,11 @@ class SanityMuranoTest(base.MuranoTest):
         self.assertRaises(Exception, self.get_deployment_info,
                           None, envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+
+    @attr(type='negative')
+    def test_deploy_service_wo_session_id(self):
+        _, env = self.create_environment('test')
+        _, sess = self.create_session(env['id'])
+        self.create_AD(env['id'], sess['id'])
+        self.assertRaises(Exception, self.deploy_session, env['id'], None)
+        self.delete_environment(env['id'])

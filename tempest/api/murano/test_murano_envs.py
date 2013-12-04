@@ -166,3 +166,15 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
         self.assertRaises(Exception, self.delete_environment,
                           env['id'])
+
+    @attr(type='negative')
+    def test_delete_env_and_get_env(self):
+        _, env = self.create_environment('test')
+        self.environments.append(env)
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+        self.assertRaises(Exception, self.get_environment_by_id, env['id'])
+
+    @attr(type='negative')
+    def test_get_environment_wo_env_id(self):
+        self.assertRaises(Exception, self.get_environment_by_id, None)
