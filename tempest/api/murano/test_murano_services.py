@@ -843,7 +843,9 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
-        self.get_list_services(env['id'], sess['id'])
+        resp, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
@@ -1312,5 +1314,16 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_service(env['id'], sess['id'], serv1['id'])
         self.assertRaises(Exception, self.delete_service, env['id'],
                           sess['id'], serv1['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='smoke')
+    def test_get_list_services_of_empty_environment(self):
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 0
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
