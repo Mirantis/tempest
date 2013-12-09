@@ -15,6 +15,7 @@
 # under the License.
 
 import testtools
+import json
 from tempest.test import attr
 from tempest.api.murano import base
 
@@ -307,3 +308,16 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp['status'] == '200'
         assert 'success' in body
         self.delete_service('test')
+
+    @attr(type='positive')
+    def test_create_complex_service(self):
+        resp, body, post_body = self.create_complex_service('test')
+        assert resp['status'] == '200'
+        assert 'success' in body
+        resp, body = self.get_metadata_object('services/test')
+        self.delete_service('test')
+        assert resp['status'] == '200'
+        for k in post_body.values():
+            if isinstance(k, list):
+                for j in k:
+                    assert j in body
