@@ -37,6 +37,7 @@ class SanityMuranoTest(base.MuranoTest):
         6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_linux_telnet(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -55,6 +56,7 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     def test_create_and_deploying_linux_apache(self):
         """
@@ -70,6 +72,7 @@ class SanityMuranoTest(base.MuranoTest):
         6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_linux_apache(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -88,6 +91,7 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     def test_create_and_deploying_demo_service(self):
         """
@@ -103,6 +107,7 @@ class SanityMuranoTest(base.MuranoTest):
         6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_demo_service(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -121,6 +126,7 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_ad(self):
@@ -137,6 +143,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -161,9 +168,11 @@ class SanityMuranoTest(base.MuranoTest):
             ip = self.add_floating_ip(i)
             time.sleep(5)
             assert self.socket_check(ip, 3389) == 0
+            assert self.socket_check(ip, 53) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_iis(self):
@@ -180,6 +189,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_IIS(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -208,6 +218,7 @@ class SanityMuranoTest(base.MuranoTest):
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet(self):
@@ -224,6 +235,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_apsnet(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -249,9 +261,11 @@ class SanityMuranoTest(base.MuranoTest):
             time.sleep(5)
             assert self.socket_check(ip, 80) == 0
             assert self.socket_check(ip, 3389) == 0
+            assert self.socket_check(ip, 443) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_iis_farm(self):
@@ -268,6 +282,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_IIS_farm(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -287,6 +302,7 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet_farm(self):
@@ -303,6 +319,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_apsnet_farm(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -322,6 +339,7 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_sql(self):
@@ -338,6 +356,7 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_SQL(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -366,6 +385,7 @@ class SanityMuranoTest(base.MuranoTest):
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_sql_cluster(self):
@@ -383,6 +403,7 @@ class SanityMuranoTest(base.MuranoTest):
             7. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
         self.create_SQL_cluster(env['id'], sess['id'], serv['domain'])
@@ -404,6 +425,7 @@ class SanityMuranoTest(base.MuranoTest):
             assert i['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_get_deployments_list_wo_env_id(self):
@@ -419,9 +441,11 @@ class SanityMuranoTest(base.MuranoTest):
             4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         self.create_session(env['id'])
         self.assertRaises(Exception, self.get_deployments_list, None)
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_create_service_after_begin_of_deploy(self):
@@ -438,11 +462,13 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.create_IIS, env['id'], sess['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_delete_service_after_begin_of_deploy(self):
@@ -459,12 +485,14 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.delete_service, env['id'],
                           sess['id'], serv['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_after_delete_environment(self):
@@ -480,9 +508,11 @@ class SanityMuranoTest(base.MuranoTest):
             5. Send request to deploy session
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
         self.assertRaises(Exception, self.deploy_session, env['id'],
                           sess['id'])
 
@@ -501,11 +531,13 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.delete_session(env['id'], sess['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'], "")
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_empty_environment(self):
@@ -520,6 +552,7 @@ class SanityMuranoTest(base.MuranoTest):
             4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.deploy_session(env['id'], sess['id'])
         env.update({'status': None})
@@ -534,6 +567,7 @@ class SanityMuranoTest(base.MuranoTest):
                 break
         assert k < 8
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_second_session_after_first(self):
@@ -550,12 +584,14 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess1 = self.create_session(env['id'])
         resp, sess2 = self.create_session(env['id'])
         self.deploy_session(env['id'], sess1['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'],
                           sess2['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_second_session_after_first_with_add_service(self):
@@ -572,11 +608,13 @@ class SanityMuranoTest(base.MuranoTest):
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess1 = self.create_session(env['id'])
         resp, sess2 = self.create_session(env['id'])
         self.deploy_session(env['id'], sess1['id'])
         self.assertRaises(Exception, self.create_AD, env['id'], sess2['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_session_wo_env_id(self):
@@ -592,11 +630,13 @@ class SanityMuranoTest(base.MuranoTest):
             5. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.assertRaises(Exception, self.deploy_session, None,
                           sess['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_get_deployment_info_wo_env_id(self):
@@ -614,6 +654,7 @@ class SanityMuranoTest(base.MuranoTest):
             7. Send request to delete environment
         """
         resp, env = self.create_environment('test')
+        self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
@@ -622,11 +663,14 @@ class SanityMuranoTest(base.MuranoTest):
         self.assertRaises(Exception, self.get_deployment_info,
                           None, envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_deploy_service_wo_session_id(self):
         _, env = self.create_environment('test')
+        self.environments.append(env)
         _, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.assertRaises(Exception, self.deploy_session, env['id'], None)
         self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
