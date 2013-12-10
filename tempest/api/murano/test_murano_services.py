@@ -51,7 +51,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_AD_wo_env_id(self):
+    def test_create_AD_without_env_id(self):
         """
         Try create AD without env_id
         Target component: Murano
@@ -71,7 +71,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_AD_wo_sess_id(self):
+    def test_create_AD_without_sess_id(self):
         """
         Try to create AD without session id
         Target component: Murano
@@ -92,7 +92,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_AD_wo_env_id(self):
+    def test_delete_AD_without_env_id(self):
         """
         Try to delete AD without environment id
         Target component: Murano
@@ -114,7 +114,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_AD_wo_session_id(self):
+    def test_delete_without_session_id(self):
         """
         Try to delete AD without session id
         Target component: Murano
@@ -164,7 +164,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_IIS_wo_env_id(self):
+    def test_create_IIS_without_env_id(self):
         """
         Try to create IIS without env id
         Target component: Murano
@@ -184,7 +184,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_IIS_wo_sess_id(self):
+    def test_create_IIS_without_sess_id(self):
         """
         Try to create IIS without session id
         Target component: Murano
@@ -205,7 +205,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_IIS_wo_env_id(self):
+    def test_delete_IIS_without_env_id(self):
         """
         Try to delete IIS without env id
         Target component: Murano
@@ -227,7 +227,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_IIS_wo_session_id(self):
+    def test_delete_IIS_without_session_id(self):
         """
         Try to delete IIS without session id
         Target component: Murano
@@ -274,7 +274,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_apsnet_wo_env_id(self):
+    def test_create_apsnet_without_env_id(self):
         """
         Try to create aspnet without env id
         Target component: Murano
@@ -294,7 +294,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_apsnet_wo_sess_id(self):
+    def test_create_apsnet_without_sess_id(self):
         """
         Try to create aspnet without session id
         Target component: Murano
@@ -315,7 +315,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_apsnet_wo_env_id(self):
+    def test_delete_apsnet_without_env_id(self):
         """
         Try to delete aspnet without env id
         Target component: Murano
@@ -337,7 +337,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_apsnet_wo_session_id(self):
+    def test_delete_apsnet_without_session_id(self):
         """
         Try to delete aspnet without session id
         Target component: Murano
@@ -387,7 +387,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_IIS_farm_wo_env_id(self):
+    def test_create_IIS_farm_without_env_id(self):
         """
         Try to create IIS farm without env id
         Target component: Murano
@@ -407,7 +407,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_IIS_farm_wo_sess_id(self):
+    def test_create_IIS_farm_without_sess_id(self):
         """
         Try to create IIS farm without session id
         Target component: Murano
@@ -428,7 +428,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_IIS_farm_wo_env_id(self):
+    def test_delete_IIS_farm_without_env_id(self):
         """
         Try to delete IIS farm without env id
         Target component: Murano
@@ -450,7 +450,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_IIS_farm_wo_session_id(self):
+    def test_delete_IIS_farm_without_session_id(self):
         """
         Try to delete IIS farm without session id
         Target component: Murano
@@ -500,7 +500,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_apsnet_farm_wo_env_id(self):
+    def test_create_apsnet_farm_without_env_id(self):
         """
         Try to create aspnet farm without env id
         Target component: Murano
@@ -520,7 +520,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_apsnet_farm_wo_sess_id(self):
+    def test_create_apsnet_farm_without_sess_id(self):
         """
         Try to create aspnet farm without sess id
         Target component: Murano
@@ -541,7 +541,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_apsnet_farm_wo_env_id(self):
+    def test_delete_apsnet_farm_without_env_id(self):
         """
         Try to delete aspnet farm without env id
         Target component: Murano
@@ -563,7 +563,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_apsnet_farm_wo_session_id(self):
+    def test_delete_apsnet_farm_without_session_id(self):
         """
         Try to delete aspnet farm without session id
         Target component: Murano
@@ -613,7 +613,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_SQL_wo_env_id(self):
+    def test_create_SQL_without_env_id(self):
         """
         Try to create SQL without env id
         Target component: Murano
@@ -633,7 +633,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_SQL_wo_sess_id(self):
+    def test_create_SQL_without_sess_id(self):
         """
         Try to create SQL without session id
         Target component: Murano
@@ -654,7 +654,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_SQL_wo_env_id(self):
+    def test_delete_SQL_without_env_id(self):
         """
         Try to delete SQL without env id
         Target component: Murano
@@ -676,7 +676,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_SQL_wo_session_id(self):
+    def test_delete_SQL_without_session_id(self):
         """
         Try to delete SQL without session id
         Target component: Murano
@@ -747,7 +747,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_linux_telnet_wo_env_id(self):
+    def test_create_linux_telnet_without_env_id(self):
         """
         Try create Linux telnet without env_id
         Target component: Murano
@@ -767,7 +767,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_linux_telnet_wo_sess_id(self):
+    def test_create_linux_telnet_without_sess_id(self):
         """
         Try to create Linux telnet without session id
         Target component: Murano
@@ -788,7 +788,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_linux_telnet_wo_env_id(self):
+    def test_delete_linux_telnet_without_env_id(self):
         """
         Try to delete Linux telnet without environment id
         Target component: Murano
@@ -811,7 +811,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_linux_telnet_wo_session_id(self):
+    def test_delete_linux_telnet_without_session_id(self):
         """
         Try to delete linux telnet without session id
         Target component: Murano
@@ -861,7 +861,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_linux_apache_wo_env_id(self):
+    def test_create_linux_apache_without_env_id(self):
         """
         Try create Linux Apache without env_id
         Target component: Murano
@@ -881,7 +881,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_linux_apache_wo_sess_id(self):
+    def test_create_linux_apache_without_sess_id(self):
         """
         Try to create Linux Apache without session id
         Target component: Murano
@@ -902,7 +902,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_linux_apache_wo_env_id(self):
+    def test_delete_linux_apache_without_env_id(self):
         """
         Try to delete Linux Apache without environment id
         Target component: Murano
@@ -925,7 +925,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_linux_apache_wo_session_id(self):
+    def test_delete_linux_apache_without_session_id(self):
         """
         Try to delete linux apache without session id
         Target component: Murano
@@ -975,7 +975,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_demo_service_wo_env_id(self):
+    def test_create_demo_service_without_env_id(self):
         """
         Try create demo service without env_id
         Target component: Murano
@@ -995,7 +995,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_demo_service_wo_sess_id(self):
+    def test_create_demo_service_without_sess_id(self):
         """
         Try to create demo service without session id
         Target component: Murano
@@ -1016,7 +1016,7 @@ class SanityMuranoTest(base.MuranoTest):
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_demo_service_wo_env_id(self):
+    def test_delete_demo_service_without_env_id(self):
         """
         Try to delete demo service without environment id
         Target component: Murano
@@ -1039,7 +1039,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_demo_service_wo_session_id(self):
+    def test_delete_demo_service_without_session_id(self):
         """
         Try to delete demo service without session id
         Target component: Murano
