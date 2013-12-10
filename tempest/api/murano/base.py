@@ -61,6 +61,8 @@ class MuranoTest(tempest.test.BaseTestCase):
                     cls.linux = i['name']
                 elif 'windows' in i['properties']['murano_image_info']:
                     cls.windows = i['name']
+                elif 'demo' in i['properties']['murano_image_info']:
+                    cls.demo = i['name']
 
     def tearDown(self):
         """
@@ -412,13 +414,39 @@ class MuranoTest(tempest.test.BaseTestCase):
                                       self.client.headers)
         return resp, json.loads(body)
 
-    def create_linux_agent(self, environment_id, session_id, domain_name=""):
-        post_body = {'availabilityZone': 'nova', 'name': 'Linux_agent',
-                     'deployTelnet': True, 'unitNamingPattern': '',
-                     'osImage': {'type': 'linux',
-                     'name': self.linux,
-                     'title': 'Linux with vNext agent'}, 'units': [{}],
-                     'flavor': 'm1.medium', 'type': 'linuxTelnetService'}
+    def create_linux_telnet(self, environment_id, session_id):
+        post_body = {"availabilityZone": "nova", "name": "LinuxTelnet",
+                     "deployTelnet": True, "unitNamingPattern": "telnet",
+                     "osImage": {"type": "linux", "name": self.linux,
+                     "title": "Linux Image"}, "units": [{}],
+                     "flavor": "m1.small", "type": "linuxTelnetService"}
+        post_body = json.dumps(post_body)
+        self.client.headers.update({'X-Configuration-Session': session_id})
+        resp, body = self.client.post('environments/' + str(environment_id) +
+                                      '/services', post_body,
+                                      self.client.headers)
+        return resp, json.loads(body)
+
+    def create_linux_apache(self, environment_id, session_id):
+        post_body = {"availabilityZone": "nova", "name": "LinuxApache",
+                     "deployApachePHP": True, "unitNamingPattern": "test-host",
+                     "instanceCount": [{}], "osImage":
+                     {"type": "linux", "name": self.linux,
+                     "title": "Linux Image"}, "units": [{}],
+                     "flavor": "m1.small", "type": "linuxApacheService"}
+        post_body = json.dumps(post_body)
+        self.client.headers.update({'X-Configuration-Session': session_id})
+        resp, body = self.client.post('environments/' + str(environment_id) +
+                                      '/services', post_body,
+                                      self.client.headers)
+        return resp, json.loads(body)
+
+    def create_demo_service(self, environment_id, session_id):
+        post_body = {"availabilityZone": "nova", "name": "demo",
+                     "unitNamingPattern": "host", "osImage":
+                     {"type": "cirros.demo", "name": self.demo,
+                     "title": "Demo"}, "units": [{}], "flavor": "m1.small",
+                     "configuration": "standalone", "type": "demoService"}
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
         resp, body = self.client.post('environments/' + str(environment_id) +

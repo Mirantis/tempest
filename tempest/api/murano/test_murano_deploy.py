@@ -22,22 +22,89 @@ from tempest.test import attr
 
 class SanityMuranoTest(base.MuranoTest):
 
-    def test_create_and_deploying_linux_agent(self):
+    @attr(type='positive')
+    def test_create_and_deploying_linux_telnet(self):
         """
-        Create and deploy Linux Agent
+        Create and deploy Linux telnet
         Target component: Murano
 
         Scenario:
         1. Send request to create environment
         2. Send request to create session
-        3. Send request to add linux agent
-        4. Send request to deploy linux agent
-        5. Send request to get info for check deloyment status
+        3. Send request to add linux telnet
+        4. Send request to deploy linux telnet
+        5. Send request to get info for check deployment status
         6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         resp, sess = self.create_session(env['id'])
-        self.create_linux_agent(env['id'], sess['id'])
+        self.create_linux_telnet(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
+        env.update({'status': None})
+        k = 0
+        while env['status'] != "ready":
+            time.sleep(15)
+            k += 1
+            resp, env = self.get_environment_by_id(env['id'])
+            if 'status' not in env:
+                env.update({'status': None})
+            if k > 120:
+                break
+        resp, envo = self.get_deployments_list(env['id'])
+        assert envo['deployments'][0]['state'] == 'success'
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
+
+    def test_create_and_deploying_linux_apache(self):
+        """
+        Create and deploy Linux apache
+        Target component: Murano
+
+        Scenario:
+        1. Send request to create environment
+        2. Send request to create session
+        3. Send request to add linux apache
+        4. Send request to deploy linux apache
+        5. Send request to get info for check deployment status
+        6. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        resp, sess = self.create_session(env['id'])
+        self.create_linux_apache(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
+        env.update({'status': None})
+        k = 0
+        while env['status'] != "ready":
+            time.sleep(15)
+            k += 1
+            resp, env = self.get_environment_by_id(env['id'])
+            if 'status' not in env:
+                env.update({'status': None})
+            if k > 120:
+                break
+        resp, envo = self.get_deployments_list(env['id'])
+        assert envo['deployments'][0]['state'] == 'success'
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
+
+    def test_create_and_deploying_demo_service(self):
+        """
+        Create and deploy demo service
+        Target component: Murano
+
+        Scenario:
+        1. Send request to create environment
+        2. Send request to create session
+        3. Send request to add demo service
+        4. Send request to deploy demo service
+        5. Send request to get info for check deployment status
+        6. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        resp, sess = self.create_session(env['id'])
+        self.create_demo_service(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})

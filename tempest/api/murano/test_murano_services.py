@@ -719,51 +719,171 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='smoke')
-    def test_create_and_delete_linux_agent(self):
+    def test_create_and_delete_linux_telnet(self):
         """
-        Create and delete Linux Agent
+        Create and delete Linux telnet
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add linux agent
-            4. Send request to delete linux agent
+            3. Send request to add linux telnet
+            4. Send request to delete linux telnet
             5. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_linux_agent(env['id'], sess['id'])
+        resp, serv = self.create_linux_telnet(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'LinuxTelnet'
         self.delete_service(env['id'], sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
-    def test_create_linux_agent_wo_env_id(self):
+    def test_create_linux_telnet_wo_env_id(self):
         """
-        Try create Linux Agent without env_id
+        Try create Linux telnet without env_id
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add linux agent using wrong env_id
+            3. Send request to add linux telnet using wrong env_id
             4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_agent,
+        self.assertRaises(Exception, self.create_linux_telnet,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_create_linux_agent_wo_sess_id(self):
+    def test_create_linux_telnet_wo_sess_id(self):
         """
-        Try to create Linux Agent without session id
+        Try to create Linux telnet without session id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux telnet using incorrect session id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        self.create_session(env['id'])
+        self.assertRaises(Exception, self.create_linux_telnet,
+                          env['id'], "")
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
+    @attr(type='negative')
+    def test_delete_linux_telnet_wo_env_id(self):
+        """
+        Try to delete Linux telnet without environment id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux telnet
+            4. Send request to remove linux telnet using uncorrect
+               environment id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_linux_telnet(env['id'], sess['id'])
+        self.assertRaises(Exception, self.delete_service,
+                          None, sess['id'], serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='negative')
+    def test_delete_linux_telnet_wo_session_id(self):
+        """
+        Try to delete linux telnet without session id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux telnet
+            4. Send request to remove linux telnet using wrong session id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_linux_telnet(env['id'], sess['id'])
+        self.assertRaises(Exception, self.delete_service,
+                          env['id'], "", serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='smoke')
+    def test_create_and_delete_linux_apache(self):
+        """
+        Create and delete Linux Apache
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux apache
+            4. Send request to delete linux agent
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_linux_apache(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'LinuxApache'
+        self.delete_service(env['id'], sess['id'], serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
+    @attr(type='negative')
+    def test_create_linux_apache_wo_env_id(self):
+        """
+        Try create Linux Apache without env_id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux apache using wrong env_id
+            4. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        self.assertRaises(Exception, self.create_linux_apache,
+                          None, sess['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='negative')
+    def test_create_linux_apache_wo_sess_id(self):
+        """
+        Try to create Linux Apache without session id
         Target component: Murano
 
         Scenario:
@@ -775,52 +895,166 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_agent,
+        self.assertRaises(Exception, self.create_linux_apache,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
-    def test_delete_linux_agent_wo_env_id(self):
+    def test_delete_linux_apache_wo_env_id(self):
         """
-        Try to delete Linux Agent without environment id
+        Try to delete Linux Apache without environment id
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add linux agent
-            4. Send request to remove linux agent using uncorrect
+            3. Send request to add linux apache
+            4. Send request to remove linux apache using uncorrect
                environment id
             5. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_linux_agent(env['id'], sess['id'])
+        resp, serv = self.create_linux_apache(env['id'], sess['id'])
         self.assertRaises(Exception, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_linux_agent_wo_session_id(self):
+    def test_delete_linux_apache_wo_session_id(self):
         """
-        Try to delete linux agent without session id
+        Try to delete linux apache without session id
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add linux agent
-            4. Send request to remove linux agent using wrong session id
+            3. Send request to add linux apache
+            4. Send request to remove linux apache using wrong session id
             5. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        resp, serv = self.create_linux_agent(env['id'], sess['id'])
+        resp, serv = self.create_linux_apache(env['id'], sess['id'])
+        self.assertRaises(Exception, self.delete_service,
+                          env['id'], "", serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='smoke')
+    def test_create_and_delete_demo_service(self):
+        """
+        Create and delete demo service
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add demo service
+            4. Send request to delete demo service
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_demo_service(env['id'], sess['id'])
+        _, infa = self.get_list_services(env['id'], sess['id'])
+        assert resp['status'] == '200'
+        assert len(infa) == 1
+        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        assert resp['status'] == '200'
+        assert infa['name'] == 'demo'
+        self.delete_service(env['id'], sess['id'], serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
+    @attr(type='negative')
+    def test_create_demo_service_wo_env_id(self):
+        """
+        Try create demo service without env_id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add demo service using wrong env_id
+            4. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        self.assertRaises(Exception, self.create_demo_service,
+                          None, sess['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='negative')
+    def test_create_demo_service_wo_sess_id(self):
+        """
+        Try to create demo service without session id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add demo service using uncorrect session id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        self.create_session(env['id'])
+        self.assertRaises(Exception, self.create_demo_service,
+                          env['id'], "")
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
+    @attr(type='negative')
+    def test_delete_demo_service_wo_env_id(self):
+        """
+        Try to delete demo service without environment id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add demo service
+            4. Send request to remove demo service using incorrect
+               environment id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_demo_service(env['id'], sess['id'])
+        self.assertRaises(Exception, self.delete_service,
+                          None, sess['id'], serv['id'])
+        self.delete_environment(env['id'])
+        self.environments.pop(self.environments.index(env))
+
+    @attr(type='negative')
+    def test_delete_demo_service_wo_session_id(self):
+        """
+        Try to delete demo service without session id
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add demo service
+            4. Send request to remove demo service using wrong session id
+            5. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        resp, serv = self.create_demo_service(env['id'], sess['id'])
         self.assertRaises(Exception, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
