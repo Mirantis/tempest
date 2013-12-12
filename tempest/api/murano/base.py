@@ -417,6 +417,7 @@ class MuranoTest(tempest.test.BaseTestCase):
     def create_linux_telnet(self, environment_id, session_id):
         post_body = {"availabilityZone": "nova", "name": "LinuxTelnet",
                      "deployTelnet": True, "unitNamingPattern": "telnet",
+                     "keyPair": "murano-lb-key",
                      "osImage": {"type": "linux", "name": self.linux,
                      "title": "Linux Image"}, "units": [{}],
                      "flavor": "m1.small", "type": "linuxTelnetService"}
@@ -429,7 +430,8 @@ class MuranoTest(tempest.test.BaseTestCase):
 
     def create_linux_apache(self, environment_id, session_id):
         post_body = {"availabilityZone": "nova", "name": "LinuxApache",
-                     "deployApachePHP": True, "unitNamingPattern": "test-host",
+                     "deployApachePHP": True, "unitNamingPattern": "apache",
+                     "keyPair": "murano-lb-key",
                      "instanceCount": [{}], "osImage":
                      {"type": "linux", "name": self.linux,
                      "title": "Linux Image"}, "units": [{}],

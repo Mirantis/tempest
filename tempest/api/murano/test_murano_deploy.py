@@ -55,8 +55,15 @@ class SanityMuranoTest(base.MuranoTest):
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        inst_id_list = self.search_instances(env['id'], 'telnet')
+        for i in inst_id_list:
+            self.inst_wth_fl_ip.append(i)
+            ip = self.add_floating_ip(i)
+            time.sleep(5)
+            assert self.socket_check(ip, 23) == 0
+            self.remove_floating_ip(i)
+            self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     def test_create_and_deploying_linux_apache(self):
         """
@@ -90,8 +97,15 @@ class SanityMuranoTest(base.MuranoTest):
         resp, envo = self.get_deployments_list(env['id'])
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        inst_id_list = self.search_instances(env['id'], 'apache')
+        for i in inst_id_list:
+            self.inst_wth_fl_ip.append(i)
+            ip = self.add_floating_ip(i)
+            time.sleep(5)
+            assert self.socket_check(ip, 80) == 0
+            self.remove_floating_ip(i)
+            self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     def test_create_and_deploying_demo_service(self):
         """
@@ -126,7 +140,6 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_ad(self):
@@ -168,11 +181,9 @@ class SanityMuranoTest(base.MuranoTest):
             ip = self.add_floating_ip(i)
             time.sleep(5)
             assert self.socket_check(ip, 3389) == 0
-            assert self.socket_check(ip, 53) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_iis(self):
@@ -218,7 +229,6 @@ class SanityMuranoTest(base.MuranoTest):
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet(self):
@@ -261,11 +271,9 @@ class SanityMuranoTest(base.MuranoTest):
             time.sleep(5)
             assert self.socket_check(ip, 80) == 0
             assert self.socket_check(ip, 3389) == 0
-            assert self.socket_check(ip, 443) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_iis_farm(self):
@@ -302,7 +310,6 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_apsnet_farm(self):
@@ -339,7 +346,6 @@ class SanityMuranoTest(base.MuranoTest):
         assert envo['deployments'][0]['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_sql(self):
@@ -381,11 +387,9 @@ class SanityMuranoTest(base.MuranoTest):
             ip = self.add_floating_ip(i)
             time.sleep(5)
             assert self.socket_check(ip, 1433) == 0
-            assert self.socket_check(ip, 3389) == 0
             self.remove_floating_ip(i)
             self.inst_wth_fl_ip.pop(self.inst_wth_fl_ip.index(i))
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='positive')
     def test_create_and_deploying_sql_cluster(self):
@@ -425,7 +429,6 @@ class SanityMuranoTest(base.MuranoTest):
             assert i['state'] == 'success'
         self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
         self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_get_deployments_list_wo_env_id(self):
