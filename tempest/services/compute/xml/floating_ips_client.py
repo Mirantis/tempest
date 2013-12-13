@@ -60,10 +60,21 @@ class FloatingIPsClientXML(RestClientXML):
             raise exceptions.NotFound(body)
         return resp, body
 
-    def create_floating_ip(self):
+    def create_floating_ip(self, pool_name=None):
         """Allocate a floating IP to the project."""
         url = 'os-floating-ips'
-        resp, body = self.post(url, None, self.headers)
+        if (pool_name is None) and \
+           (self.config.network.quantum_available is True):
+                pool_name = self.config.network.public_network_id
+        if pool_name:
+            doc = Document()
+            pool = Element("pool")
+            pool.append(pool_name)
+            doc.append(pool)
+            resp, body = self.post(url, str(doc), self.headers)
+        else:
+            resp, body = self.post(url, None, self.headers)
+            resp, body = self.post(url, None, self.headers)
         body = self._parse_floating_ip(etree.fromstring(body))
         return resp, body
 

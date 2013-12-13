@@ -47,10 +47,15 @@ class FloatingIPsClientJSON(RestClient):
             raise exceptions.NotFound(body)
         return resp, body['floating_ip']
 
-    def create_floating_ip(self):
+    def create_floating_ip(self, pool_name=None):
         """Allocate a floating IP to the project."""
         url = 'os-floating-ips'
-        resp, body = self.post(url, None, None)
+        if (pool_name is None) and \
+           (self.config.network.quantum_available is True):
+                pool_name = self.config.network.public_network_id
+        post_body = {'pool': pool_name}
+        post_body = json.dumps(post_body)
+        resp, body = self.post(url, post_body, self.headers)
         body = json.loads(body)
         return resp, body['floating_ip']
 
