@@ -152,7 +152,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add AD
             4. Send request to deploy AD
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -196,7 +196,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add IIS
             4. Send request to deploy IIS
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -241,7 +241,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add apsnet
             4. Send request to deploy apsnet
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -286,7 +286,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add IIS farm
             4. Send request to deploy IIS farm
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -322,7 +322,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add apsnet farm
             4. Send request to deploy apsnet farm
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -358,7 +358,7 @@ class SanityMuranoTest(base.MuranoTest):
             2. Send request to create session
             3. Send request to add SQL
             4. Send request to deploy SQL
-            5. Send request to get info for check deloyment status
+            5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -403,7 +403,7 @@ class SanityMuranoTest(base.MuranoTest):
             3. Send request to add AD
             4. Send request to add SQL cluster
             5. Send request to deploy session
-            6. Send request to get info for check deloyment status
+            6. Send request to get info for check deployment status
             7. Send request to delete environment
         """
         resp, env = self.create_environment('test')
@@ -411,6 +411,123 @@ class SanityMuranoTest(base.MuranoTest):
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
         self.create_SQL_cluster(env['id'], sess['id'], serv['domain'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
+        env.update({'status': None})
+        k = 0
+        while env['status'] != "ready":
+            time.sleep(15)
+            k += 1
+            resp, env = self.get_environment_by_id(env['id'])
+            if 'status' not in env:
+                env.update({'status': None})
+            if k > 180:
+                break
+        assert (k > 7 and k <= 180)
+        resp, envo = self.get_deployments_list(env['id'])
+        for i in envo['deployments']:
+            assert i['state'] == 'success'
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
+
+    @attr(type='positive')
+    def test_create_and_deploying_iis_and_demo(self):
+        """
+        Create and deploy IIS+demo
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add IIS
+            4. Send request to add Demo service
+            5. Send request to deploy session
+            6. Send request to get info for check deployment status
+            7. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        self.create_IIS(env['id'], sess['id'])
+        self.create_demo_service(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
+        env.update({'status': None})
+        k = 0
+        while env['status'] != "ready":
+            time.sleep(15)
+            k += 1
+            resp, env = self.get_environment_by_id(env['id'])
+            if 'status' not in env:
+                env.update({'status': None})
+            if k > 180:
+                break
+        assert (k > 7 and k <= 180)
+        resp, envo = self.get_deployments_list(env['id'])
+        for i in envo['deployments']:
+            assert i['state'] == 'success'
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
+
+    @attr(type='positive')
+    def test_create_and_deploying_linux_and_demo(self):
+        """
+        Create and deploy linux telnet + demo service
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add linux telnet
+            4. Send request to add Demo service
+            5. Send request to deploy session
+            6. Send request to get info for check deployment status
+            7. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        self.create_linux_telnet(env['id'], sess['id'])
+        self.create_demo_service(env['id'], sess['id'])
+        self.deploy_session(env['id'], sess['id'])
+        self.get_session_info(env['id'], sess['id'])
+        env.update({'status': None})
+        k = 0
+        while env['status'] != "ready":
+            time.sleep(15)
+            k += 1
+            resp, env = self.get_environment_by_id(env['id'])
+            if 'status' not in env:
+                env.update({'status': None})
+            if k > 180:
+                break
+        assert (k > 7 and k <= 180)
+        resp, envo = self.get_deployments_list(env['id'])
+        for i in envo['deployments']:
+            assert i['state'] == 'success'
+        self.get_deployment_info(env['id'], envo['deployments'][0]['id'])
+        self.delete_environment(env['id'])
+
+    @attr(type='positive')
+    def test_create_and_deploying_linux_and_iis(self):
+        """
+        Create and deploy IIS+linux telnet
+        Target component: Murano
+
+        Scenario:
+            1. Send request to create environment
+            2. Send request to create session
+            3. Send request to add IIS
+            4. Send request to add linux telnet
+            5. Send request to deploy session
+            6. Send request to get info for check deployment status
+            7. Send request to delete environment
+        """
+        resp, env = self.create_environment('test')
+        self.environments.append(env)
+        resp, sess = self.create_session(env['id'])
+        self.create_IIS(env['id'], sess['id'])
+        self.create_linux_telnet(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
