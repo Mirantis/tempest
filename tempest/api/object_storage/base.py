@@ -34,7 +34,7 @@ class BaseObjectTest(tempest.test.BaseTestCase):
         cls.isolated_creds = isolated_creds.IsolatedCreds(cls.__name__)
         if cls.config.compute.allow_tenant_isolation:
             # Get isolated creds for normal user
-            creds = cls.isolated_creds.get_primary_creds()
+            creds = cls.isolated_creds.get_admin_creds()
             username, tenant_name, password = creds
             cls.os = clients.Manager(username=username,
                                      password=password,
@@ -46,7 +46,7 @@ class BaseObjectTest(tempest.test.BaseTestCase):
                                            password=admin_password,
                                            tenant_name=admin_tenant_name)
             # Get isolated creds for alt user
-            alt_creds = cls.isolated_creds.get_alt_creds()
+            alt_creds = cls.isolated_creds.get_admin_creds()
             alt_username, alt_tenant, alt_password = alt_creds
             cls.os_alt = clients.Manager(username=alt_username,
                                          password=alt_password,
