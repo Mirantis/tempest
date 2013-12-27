@@ -24,6 +24,9 @@ from tempest.test import attr
 from tempest.test import HTTP_SUCCESS
 
 
+import testtools
+
+
 class ObjectTest(base.BaseObjectTest):
     @classmethod
     def setUpClass(cls):
@@ -289,6 +292,7 @@ class PublicObjectTest(base.BaseObjectTest):
         super(PublicObjectTest, self).tearDown()
 
     @attr(type='smoke')
+    @testtools.skip('Feature is not supported by the FUEL')
     def test_access_public_container_object_without_using_creds(self):
         # make container public-readable and access an object in it object
         # anonymously, without using credentials
