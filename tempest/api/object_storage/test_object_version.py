@@ -20,6 +20,9 @@ from tempest.common.utils.data_utils import rand_name
 from tempest.test import attr
 
 
+import testtools
+
+
 class ContainerTest(base.BaseObjectTest):
     @classmethod
     def setUpClass(cls):
@@ -42,6 +45,7 @@ class ContainerTest(base.BaseObjectTest):
         self.assertEqual(header_value, versioned)
 
     @attr(type='smoke')
+    @testtools.skip('Feature is not supported by the FUEL')
     def test_versioned_container(self):
         # create container
         vers_container_name = rand_name(name='TestVersionContainer')
