@@ -55,3 +55,4 @@ class MistralTest(tempest.test.BaseTestCase):
         resp, body = self.client.get('v1/%s' % name,
                                      self.client.headers)
         return resp, json.loads(body)
+

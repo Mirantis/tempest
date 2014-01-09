@@ -35,3 +35,4 @@ class SanityTests(base.MistralTest):
         resp, body = self.get_list_obj('workbooks')
         assert resp['status'] == '200'
         assert body['workbooks'] == []
+
