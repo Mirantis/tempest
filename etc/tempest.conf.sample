@@ -411,6 +411,10 @@ agListnerIP = 10.0.0.155
 # ClusterIP for creating SQL cluster
 clusterIP = 10.0.0.150
 
+[mistral]
+# Mistral endpoint
+mistral_url = http://127.0.0.1:8989
+
 [savanna_common]
 # Host for Savanna
 savanna_host = '127.0.0.1'
@@ -461,6 +465,8 @@ heat = false
 horizon = True
 # Whether or not murano is expected to be available
 murano = false
+# Whether or not mistral is expected to be available
+mistral = false
 # Whether or not savanna is expected to be available
 savanna = false
 

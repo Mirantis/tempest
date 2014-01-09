@@ -493,6 +493,14 @@ MuranoGroup = [
 ]
 
 
+mistral_group = cfg.OptGroup(name='mistral', title='Tests for Mistral')
+
+MistralGroup = [
+    cfg.StrOpt('mistral_url',
+               default='http://127.0.0.1:8989/',
+               help='Mistral endpoint')
+]
+
 stress_group = cfg.OptGroup(name='stress', title='Stress Test Options')
 
 StressGroup = [
@@ -727,6 +735,9 @@ ServiceAvailableGroup = [
     cfg.BoolOpt('murano',
                 default=False,
                 help="Whether or not murano is expected to be available"),
+    cfg.BoolOpt('mistral',
+                default=False,
+                help="Whether or not mistral is expected to be available"),
     cfg.BoolOpt('savanna',
                 default=False,
                 help="Whether or not savanna is expected to be available"),
@@ -791,6 +802,7 @@ class TempestConfig:
         register_opt_group(cfg.CONF, dashboard_group, DashboardGroup)
         register_opt_group(cfg.CONF, boto_group, BotoGroup)
         register_opt_group(cfg.CONF, murano_group, MuranoGroup)
+        register_opt_group(cfg.CONF, mistral_group, MistralGroup)
         register_opt_group(cfg.CONF, compute_admin_group, ComputeAdminGroup)
         register_opt_group(cfg.CONF, stress_group, StressGroup)
         register_opt_group(cfg.CONF, scenario_group, ScenarioGroup)
@@ -813,6 +825,7 @@ class TempestConfig:
         self.compute_admin = cfg.CONF['compute-admin']
         self.stress = cfg.CONF.stress
         self.murano = cfg.CONF.murano
+        self.mistral = cfg.CONF.mistral
         self.scenario = cfg.CONF.scenario
         self.service_available = cfg.CONF.service_available
         self.debug = cfg.CONF.debug
