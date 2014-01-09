@@ -40,6 +40,15 @@ class MistralTest(tempest.test.BaseTestCase):
         cls.client.service = 'identity'
         cls.token = cls.client.get_auth()
         cls.client.base_url = cls.config.mistral.mistral_url
+        cls.obj = []
+
+    def tearDown(self):
+        super(MistralTest, self).tearDown()
+        for i in self.obj:
+            try:
+                self.client.delete_obj(i[0], i[1])
+            except Exception:
+                pass
 
     def check_base_url(self):
         resp, body = self.client.get('',
@@ -55,4 +64,13 @@ class MistralTest(tempest.test.BaseTestCase):
         resp, body = self.client.get('v1/%s' % name,
                                      self.client.headers)
         return resp, json.loads(body)
+
+    def create_obj(self, path, name):
+        post_body = '{"name": "%s"}' % name
+        resp, body = self.client.post('v1/%s/' % path, post_body,
+                                      self.client.headers)
+        return resp, json.loads(body)
+
+    def delete_obj(self, path, name):
+        self.client.delete('v1/%s/%s' % (path, name), self.client.headers)
 

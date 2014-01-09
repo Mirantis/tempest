@@ -16,6 +16,7 @@
 
 from tempest.api.mistral import base
 from tempest.test import attr
+from tempest import exceptions
 
 
 class SanityTests(base.MistralTest):
@@ -35,4 +36,30 @@ class SanityTests(base.MistralTest):
         resp, body = self.get_list_obj('workbooks')
         assert resp['status'] == '200'
         assert body['workbooks'] == []
+
+    @attr(type='smoke')
+    def test_create_and_delete_workbook(self):
+        resp, body = self.create_obj('workbooks', 'test')
+        self.obj.append(['workbooks', 'test'])
+        assert resp['status'] == '201'
+        assert body['name'] == 'test'
+        resp, body = self.get_list_obj('workbooks')
+        assert resp['status'] == '200'
+        assert body['workbooks'][0]['name'] == 'test'
+        self.delete_obj('workbooks', 'test')
+        _, body = self.get_list_obj('workbooks')
+        assert body['workbooks'] == []
+        self.obj.pop(self.obj.index(['workbooks', 'test']))
+
+    @attr(type='negative')
+    def test_double_create_obj(self):
+        self.create_obj('workbooks', 'test')
+        self.obj.append(['workbooks', 'test'])
+        self.assertRaises(exceptions.BadRequest, self.create_obj, 'workbooks',
+                          'test')
+        self.delete_obj('workbooks', 'test')
+        _, body = self.get_list_obj('workbooks')
+        assert body['workbooks'] == []
+        self.obj.pop(self.obj.index(['workbooks', 'test']))
+
 
