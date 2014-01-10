@@ -46,7 +46,7 @@ class MistralTest(tempest.test.BaseTestCase):
         super(MistralTest, self).tearDown()
         for i in self.obj:
             try:
-                self.client.delete_obj(i[0], i[1])
+                self.delete_obj(i[0], i[1])
             except Exception:
                 pass
 
