@@ -18,6 +18,7 @@
 import tempest.test
 import json
 from tempest.common import rest_client
+import requests
 
 class MistralTest(tempest.test.BaseTestCase):
 
@@ -79,4 +80,11 @@ class MistralTest(tempest.test.BaseTestCase):
         resp, body = self.client.put('v1/%s/%s' % (path, name), post_body,
                                      self.client.headers)
         return resp, json.loads(body)
+
+    def get_workbook_definition(self, name):
+        headers = {'X-Auth-Token': self.client.headers['X-Auth-Token']}
+        resp, body = self.client.get('v1/workbooks/%s/definition' % name,
+                                     headers)
+        return resp, body
+
 

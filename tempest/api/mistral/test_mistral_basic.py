@@ -83,6 +83,16 @@ class SanityTests(base.MistralTest):
         self.delete_obj('workbooks', 'testupdated')
         self.obj.pop(self.obj.index(['workbooks', 'testupdated']))
 
+    @attr(type='smoke')
+    def test_get_workbook_definition(self):
+        self.create_obj('workbooks', 'test')
+        self.obj.append(['workbooks', 'test'])
+        resp, body = self.get_workbook_definition('test')
+        assert resp['status'] == '200'
+        assert body is not None
+        self.delete_obj('workbooks', 'test')
+        self.obj.pop(self.obj.index(['workbooks', 'test']))
+
     @attr(type='negative')
     def test_double_create_obj(self):
         self.create_obj('workbooks', 'test')
