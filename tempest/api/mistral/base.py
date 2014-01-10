@@ -18,7 +18,7 @@
 import tempest.test
 import json
 from tempest.common import rest_client
-import requests
+
 
 class MistralTest(tempest.test.BaseTestCase):
 
