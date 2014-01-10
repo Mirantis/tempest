@@ -74,3 +74,9 @@ class MistralTest(tempest.test.BaseTestCase):
     def delete_obj(self, path, name):
         self.client.delete('v1/%s/%s' % (path, name), self.client.headers)
 
+    def update_obj(self, path, name):
+        post_body = '{"name": "%s"}' % (name + 'updated')
+        resp, body = self.client.put('v1/%s/%s' % (path, name), post_body,
+                                     self.client.headers)
+        return resp, json.loads(body)
+
