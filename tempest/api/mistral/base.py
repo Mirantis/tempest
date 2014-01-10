@@ -18,6 +18,7 @@
 import tempest.test
 import json
 from tempest.common import rest_client
+import os
 
 
 class MistralTest(tempest.test.BaseTestCase):
@@ -87,4 +88,13 @@ class MistralTest(tempest.test.BaseTestCase):
                                      headers)
         return resp, body
 
+    def upload_workbook_definition(self, name):
+        headers = {'Content-Type': 'text/plain',
+                   'X-Auth-Token': self.client.headers['X-Auth-Token']}
+        __location__ = os.path.realpath(os.path.join(os.getcwd(),
+                                                     os.path.dirname(__file__)))
+        f = open(os.path.join(__location__, 'demo.yaml'), 'rb').read()
+        resp, body = self.client.put('v1/workbooks/%s/definition' % name, f,
+                                     headers)
+        return resp, body
 
