@@ -14,6 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import testtools
 from tempest.api.mistral import base
 from tempest.test import attr
 from tempest import exceptions
@@ -93,6 +94,7 @@ class SanityTests(base.MistralTest):
         self.delete_obj('workbooks', 'test')
         self.obj.pop(self.obj.index(['workbooks', 'test']))
 
+    @testtools.skip('it is not realised')
     @attr(type='smoke')
     def test_upload_workbook_definition(self):
         self.create_obj('workbooks', 'test1')
