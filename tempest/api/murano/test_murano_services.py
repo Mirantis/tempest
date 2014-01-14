@@ -1105,6 +1105,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1257281')
     @attr(type='negative')
     def test_get_list_of_services_wo_sess_id(self):
         """
