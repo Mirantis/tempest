@@ -353,6 +353,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert body['result'] == 'success'
         self.delete_service('test')
 
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268976')
     @attr(type='negative')
     def test_switch_parameter_none_existing_service(self):
         resp = self.switch_parameter_none_existing_service()
