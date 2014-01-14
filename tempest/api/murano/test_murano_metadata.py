@@ -114,12 +114,12 @@ class SanityMuranoTest(base.MuranoMeta):
         self.assertRaises(Exception, self.create_directory,
                           "someth/", "testdir")
 
-    @testtools.skip('It is look as a bug')
     @attr(type='negative')
     def test_double_create_directory(self):
         self.create_directory("workflows/", "testdir")
-        self.assertRaises(Exception, self.create_directory,
-                          "workflows/", "testdir")
+        resp, body = self.create_directory("workflows/", "testdir")
+        assert resp['status'] == '200'
+        assert body['result'] == 'success'
         self.delete_metadata_obj_or_folder("workflows/testdir")
 
     @attr(type='negative')
@@ -195,14 +195,14 @@ class SanityMuranoTest(base.MuranoMeta):
         assert ('testfile.txt' in body1)
 
     @attr(type='smoke')
-    @testtools.skip('It is look as a bug')
     def test_upload_file_and_delete_manifests(self):
-        resp = self.upload_metadata_object(path="manifests")
+        resp = self.upload_metadata_object(path="manifests",
+                                           filename='testfile-manifest.yaml')
         resp1, body1 = self.get_list_metadata_objects("manifests")
-        self.delete_metadata_obj_or_folder("manifests/testfile.txt")
+        self.delete_metadata_obj_or_folder("manifests/testfile-manifest.yaml")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
-        assert ('testfile.txt' in body1)
+        assert ('testfile-manifest.yaml' in body1)
 
     @attr(type='smoke')
     def test_get_metadata_object(self):

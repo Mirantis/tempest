@@ -589,21 +589,21 @@ class MuranoMeta(tempest.test.BaseTestCase):
         resp, body = self.client.get('v1/admin/' + object, self.client.headers)
         return resp, body
 
-    def upload_metadata_object(self, path):
-        with open('testfile.txt', 'w') as f:
+    def upload_metadata_object(self, path, filename='testfile.txt'):
+        with open(filename, 'w') as f:
             f.write("It's a test file")
-        files = {'file': open('testfile.txt', 'rb')}
+        files = {'file': open(filename, 'rb')}
         headers = {'X-Auth-Token': self.token}
         resp = requests.post('%s/v1/admin/%s' % (self.client.base_url, path),
                              files=files, headers=headers)
-        os.remove('testfile.txt')
+        os.remove(filename)
         return resp
 
     def create_directory(self, path, name):
-        post_body = '{}'
+        post_body = None
         resp, body = self.client.put('v1/admin/' + path + name, post_body,
                                      self.client.headers)
-        return resp, body
+        return resp, json.loads(body)
 
     def delete_metadata_obj_or_folder(self, object):
         resp, body = self.client.delete('v1/admin/' + object,
