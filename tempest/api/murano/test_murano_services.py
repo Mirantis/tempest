@@ -49,7 +49,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_AD_without_env_id(self):
         """
@@ -1122,7 +1121,8 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
-        resp, somelist = self.get_list_services(env['id'], "")
+        resp, somelist = self.get_list_services(env['id'], None)
+        assert resp['status'] == '200'
         assert somelist == []
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
