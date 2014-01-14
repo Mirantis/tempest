@@ -49,6 +49,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_AD_without_env_id(self):
         """
