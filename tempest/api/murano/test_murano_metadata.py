@@ -18,6 +18,7 @@ import testtools
 import json
 from tempest.test import attr
 from tempest.api.murano import base
+from tempest import exceptions
 
 class SanityMuranoTest(base.MuranoMeta):
 
@@ -337,3 +338,42 @@ class SanityMuranoTest(base.MuranoMeta):
             if isinstance(k, list):
                 for j in k:
                     assert j in body
+
+    @attr(type='smoke')
+    def test_get_list_all_services(self):
+        resp, body = self.get_list_metadata_objects('services')
+        assert resp['status'] == '200'
+        assert body is not None
+
+    @attr(type='smoke')
+    def test_switch_service_parameter(self):
+        self.create_complex_service('test')
+        resp, body = self.switch_service_parameter('test')
+        assert resp['status'] == '200'
+        assert body['result'] == 'success'
+        self.delete_service('test')
+
+    @attr(type='negative')
+    def test_switch_parameter_none_existing_service(self):
+        resp = self.switch_parameter_none_existing_service()
+        assert resp.status_code == 404
+
+    @attr(type='positive')
+    def test_reset_cache(self):
+        resp, body = self.reset_cache()
+        assert resp['status'] == '200'
+        assert body['result'] == 'success'
+
+    @attr(type='smoke')
+    def test_get_meta_info_about_service(self):
+        self.create_new_service('test')
+        resp, body = self.get_list_of_meta_information_about_service('test')
+        self.delete_service('test')
+        assert resp['status'] == '200'
+        assert body['name'] == 'test'
+        assert body['version'] == '0.1'
+
+    @attr(type='negative')
+    def test_get_meta_info_about_none_existing_service(self):
+        resp = self.get_list_of_meta_info_about_none_existing_service()
+        assert resp.status_code == 404
