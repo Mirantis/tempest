@@ -608,7 +608,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
     def delete_metadata_obj_or_folder(self, object):
         resp, body = self.client.delete('v1/admin/' + object,
                                         self.client.headers)
-        return resp, body
+        return resp, json.loads(body)
 
     def create_new_service(self, name):
         post_body = {"name": name, "version": "0.1",

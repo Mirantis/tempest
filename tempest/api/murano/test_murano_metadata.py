@@ -58,7 +58,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert resp['status'] == '200'
 
     @attr(type='negative')
-    def test_get_list_metadata_objects_uncorrect_type(self):
+    def test_get_list_metadata_objects_incorrect_type(self):
         self.assertRaises(Exception, self.get_list_metadata_objects,
                           "someth")
 
@@ -80,6 +80,8 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("workflows/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+        assert body['result'] == 'success'
+        assert body1['result'] == 'success'
 
     @attr(type='smoke')
     def test_create_directory_and_delete_ui(self):
@@ -87,6 +89,8 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("ui/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+        assert body['result'] == 'success'
+        assert body1['result'] == 'success'
 
     @attr(type='smoke')
     def test_create_directory_and_delete_heat(self):
@@ -94,6 +98,8 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("heat/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+        assert body['result'] == 'success'
+        assert body1['result'] == 'success'
 
     @attr(type='smoke')
     def test_create_directory_and_delete_agent(self):
@@ -101,6 +107,8 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("agent/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+        assert body['result'] == 'success'
+        assert body1['result'] == 'success'
 
     @attr(type='smoke')
     def test_create_directory_and_delete_scripts(self):
@@ -108,9 +116,17 @@ class SanityMuranoTest(base.MuranoMeta):
         resp1, body1 = self.delete_metadata_obj_or_folder("scripts/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
+        assert body['result'] == 'success'
+        assert body1['result'] == 'success'
+
+    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268934')
+    @attr(type='negative')
+    def test_create_directory_manifests(self):
+        self.assertRaises(Exception, self.create_directory,
+                          "manifests/", "testdir")
 
     @attr(type='negative')
-    def test_create_directory_uncorrect_type(self):
+    def test_create_directory_incorrect_type(self):
         self.assertRaises(Exception, self.create_directory,
                           "someth/", "testdir")
 
@@ -145,7 +161,7 @@ class SanityMuranoTest(base.MuranoMeta):
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
 
     @attr(type='negative')
-    def test_upload_file_uncorrect(self):
+    def test_upload_file_incorrect(self):
         resp = self.upload_metadata_object(path="workflows/testfil")
         assert resp.status_code == 404
 
