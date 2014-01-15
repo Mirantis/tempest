@@ -78,47 +78,57 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_create_directory_and_delete_workflows(self):
         resp, body = self.create_directory("workflows/", "testdir")
+        self.objs.append("workflows/testdir")
         resp1, body1 = self.delete_metadata_obj_or_folder("workflows/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
         assert body['result'] == 'success'
         assert body1['result'] == 'success'
+        self.objs.pop(self.objs.index("workflows/testdir"))
 
     @attr(type='smoke')
     def test_create_directory_and_delete_ui(self):
         resp, body = self.create_directory("ui/", "testdir")
+        self.objs.append("ui/testdir")
         resp1, body1 = self.delete_metadata_obj_or_folder("ui/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
         assert body['result'] == 'success'
         assert body1['result'] == 'success'
+        self.objs.pop(self.objs.index("ui/testdir"))
 
     @attr(type='smoke')
     def test_create_directory_and_delete_heat(self):
         resp, body = self.create_directory("heat/", "testdir")
+        self.objs.append("heat/testdir")
         resp1, body1 = self.delete_metadata_obj_or_folder("heat/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
         assert body['result'] == 'success'
         assert body1['result'] == 'success'
+        self.objs.pop(self.objs.index("heat/testdir"))
 
     @attr(type='smoke')
     def test_create_directory_and_delete_agent(self):
         resp, body = self.create_directory("agent/", "testdir")
+        self.objs.append("agent/testdir")
         resp1, body1 = self.delete_metadata_obj_or_folder("agent/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
         assert body['result'] == 'success'
         assert body1['result'] == 'success'
+        self.objs.pop(self.objs.index("agent/testdir"))
 
     @attr(type='smoke')
     def test_create_directory_and_delete_scripts(self):
         resp, body = self.create_directory("scripts/", "testdir")
+        self.objs.append("scripts/testdir")
         resp1, body1 = self.delete_metadata_obj_or_folder("scripts/testdir")
         assert resp['status'] == '200'
         assert resp1['status'] == '200'
         assert body['result'] == 'success'
         assert body1['result'] == 'success'
+        self.objs.pop(self.objs.index("scripts/testdir"))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268934')
     @attr(type='negative')
@@ -134,10 +144,12 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_double_create_directory(self):
         self.create_directory("workflows/", "testdir")
+        self.objs.append("workflows/testdir")
         resp, body = self.create_directory("workflows/", "testdir")
         assert resp['status'] == '200'
         assert body['result'] == 'success'
         self.delete_metadata_obj_or_folder("workflows/testdir")
+        self.objs.pop(self.objs.index("workflows/testdir"))
 
     @attr(type='negative')
     def test_delete_nonexistent_object(self):
@@ -159,9 +171,11 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='negative')
     def test_double_upload_file(self):
         self.upload_metadata_object(path="workflows")
+        self.objs.append("workflows/testfile.txt")
         resp = self.upload_metadata_object(path="workflows")
         assert resp.status_code == 403
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
+        self.objs.pop(self.objs.index("workflows/testfile.txt"))
 
     @attr(type='negative')
     def test_upload_file_incorrect(self):
@@ -171,65 +185,79 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_upload_file_and_delete_workflows(self):
         resp = self.upload_metadata_object(path="workflows")
+        self.objs.append("workflows/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("workflows")
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
+        self.objs.pop(self.objs.index("workflows/testfile.txt"))
 
     @attr(type='smoke')
     def test_upload_file_and_delete_ui(self):
         resp = self.upload_metadata_object(path="ui")
+        self.objs.append("ui/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("ui")
         self.delete_metadata_obj_or_folder("ui/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
+        self.objs.pop(self.objs.index("ui/testfile.txt"))
 
     @attr(type='smoke')
     def test_upload_file_and_delete_heat(self):
         resp = self.upload_metadata_object(path="heat")
+        self.objs.append("heat/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("heat")
         self.delete_metadata_obj_or_folder("heat/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
+        self.objs.pop(self.objs.index("heat/testfile.txt"))
 
     @attr(type='smoke')
     def test_upload_file_and_delete_agent(self):
         resp = self.upload_metadata_object(path="agent")
+        self.objs.append("agent/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("agent")
         self.delete_metadata_obj_or_folder("agent/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
+        self.objs.pop(self.objs.index("agent/testfile.txt"))
 
     @attr(type='smoke')
     def test_upload_file_and_delete_scripts(self):
         resp = self.upload_metadata_object(path="scripts")
+        self.objs.append("scripts/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("scripts")
         self.delete_metadata_obj_or_folder("scripts/testfile.txt")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile.txt' in body1)
+        self.objs.pop(self.objs.index("scripts/testfile.txt"))
 
     @attr(type='smoke')
     def test_upload_file_and_delete_manifests(self):
         resp = self.upload_metadata_object(path="manifests",
                                            filename='testfile-manifest.yaml')
+        self.objs.append("manifests/testfile-manifest.yaml")
         resp1, body1 = self.get_list_metadata_objects("manifests")
         self.delete_metadata_obj_or_folder("manifests/testfile-manifest.yaml")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
         assert ('testfile-manifest.yaml' in body1)
+        self.objs.pop(self.objs.index("manifests/testfile-manifest.yaml"))
 
     @attr(type='smoke')
     def test_get_metadata_object(self):
         self.upload_metadata_object(path="workflows")
+        self.objs.append("workflows/testfile.txt")
         resp1, body1 = self.get_metadata_object("workflows/testfile.txt")
         self.delete_metadata_obj_or_folder("workflows/testfile.txt")
         assert resp1['status'] == '200'
         assert body1 is not None
+        self.objs.pop(self.objs.index("workflows/testfile.txt"))
 
     @attr(type='negative')
     def test_get_nonexistent_metadata_object(self):
@@ -240,16 +268,22 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='negative')
     def test_delete_nonempty_folder_in_workflows(self):
         self.create_directory("workflows/", "testdir")
+        self.objs.append("workflows/testdir")
         self.upload_metadata_object(path="workflows/testdir")
+        self.objs.append("workflows/testdir/testfile.txt")
         self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
                           "workflows/testdir")
         self.delete_metadata_obj_or_folder("workflows/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("workflows/testdir")
+        self.objs.pop(self.objs.index("workflows/testdir"))
+        self.objs.pop(self.objs.index("workflows/testdir/testfile.txt"))
 
     @attr(type='positive')
     def test_create_folder_and_upload_file_workflows(self):
         self.create_directory("workflows/", "testdir")
+        self.objs.append("workflows/testdir")
         resp = self.upload_metadata_object(path="workflows/testdir")
+        self.objs.append("workflows/testdir/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("workflows/testdir")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
@@ -262,21 +296,29 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("workflows")
         assert resp['status'] == '200'
         assert ('testfile.txt' not in body)
+        self.objs.pop(self.objs.index("workflows/testdir"))
+        self.objs.pop(self.objs.index("workflows/testdir/testfile.txt"))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_ui(self):
         self.create_directory("ui/", "testdir")
+        self.objs.append("ui/testdir")
         self.upload_metadata_object(path="ui/testdir")
+        self.objs.append("ui/testdir/testfile.txt")
         self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
                           "ui/testdir")
         self.delete_metadata_obj_or_folder("ui/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("ui/testdir")
+        self.objs.pop(self.objs.index("ui/testdir"))
+        self.objs.pop(self.objs.index("ui/testdir/testfile.txt"))
 
     @attr(type='positive')
     def test_create_folder_and_upload_file_ui(self):
         self.create_directory("ui/", "testdir")
+        self.objs.append("ui/testdir")
         resp = self.upload_metadata_object(path="ui/testdir")
+        self.objs.append("ui/testdir/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("ui/testdir")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
@@ -289,21 +331,29 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("ui")
         assert resp['status'] == '200'
         assert ('testfile.txt' not in body)
+        self.objs.pop(self.objs.index("ui/testdir"))
+        self.objs.pop(self.objs.index("ui/testdir/testfile.txt"))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_heat(self):
         self.create_directory("heat/", "testdir")
+        self.objs.append("heat/testdir")
         self.upload_metadata_object(path="heat/testdir")
+        self.objs.append("heat/testdir/testfile.txt")
         self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
                           "heat/testdir")
         self.delete_metadata_obj_or_folder("heat/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("heat/testdir")
+        self.objs.pop(self.objs.index("heat/testdir"))
+        self.objs.pop(self.objs.index("heat/testdir/testfile.txt"))
 
     @attr(type='positive')
     def test_create_folder_and_upload_file_heat(self):
         self.create_directory("heat/", "testdir")
+        self.objs.append("heat/testdir")
         resp = self.upload_metadata_object(path="heat/testdir")
+        self.objs.append("heat/testdir/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("heat/testdir")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
@@ -316,21 +366,29 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("heat")
         assert resp['status'] == '200'
         assert ('testfile.txt' not in body)
+        self.objs.pop(self.objs.index("heat/testdir"))
+        self.objs.pop(self.objs.index("heat/testdir/testfile.txt"))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_agent(self):
         self.create_directory("agent/", "testdir")
+        self.objs.append("agent/testdir")
         self.upload_metadata_object(path="agent/testdir")
+        self.objs.append("agent/testdir/testfile.txt")
         self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
                           "agent/testdir")
         self.delete_metadata_obj_or_folder("agent/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("agent/testdir")
+        self.objs.pop(self.objs.index("agent/testdir"))
+        self.objs.pop(self.objs.index("agent/testdir/testfile.txt"))
 
     @attr(type='positive')
     def test_create_folder_and_upload_file_agent(self):
         self.create_directory("agent/", "testdir")
+        self.objs.append("agent/testdir")
         resp = self.upload_metadata_object(path="agent/testdir")
+        self.objs.append("agent/testdir/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("agent/testdir")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
@@ -343,21 +401,29 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("agent")
         assert resp['status'] == '200'
         assert ('testfile.txt' not in body)
+        self.objs.pop(self.objs.index("agent/testdir"))
+        self.objs.pop(self.objs.index("agent/testdir/testfile.txt"))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_scripts(self):
         self.create_directory("scripts/", "testdir")
+        self.objs.append("scripts/testdir")
         self.upload_metadata_object(path="scripts/testdir")
+        self.objs.append("scripts/testdir/testfile.txt")
         self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
                           "scripts/testdir")
         self.delete_metadata_obj_or_folder("scripts/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("scripts/testdir")
+        self.objs.pop(self.objs.index("scripts/testdir"))
+        self.objs.pop(self.objs.index("scripts/testdir/testfile.txt"))
 
     @attr(type='positive')
     def test_create_folder_and_upload_file_scripts(self):
         self.create_directory("scripts/", "testdir")
+        self.objs.append("scripts/testdir")
         resp = self.upload_metadata_object(path="scripts/testdir")
+        self.objs.append("scripts/testdir/testfile.txt")
         resp1, body1 = self.get_list_metadata_objects("scripts/testdir")
         assert resp.status_code == 200
         assert resp1['status'] == '200'
@@ -370,27 +436,34 @@ class SanityMuranoTest(base.MuranoMeta):
         resp, body = self.get_list_metadata_objects("scripts")
         assert resp['status'] == '200'
         assert ('testfile.txt' not in body)
+        self.objs.pop(self.objs.index("scripts/testdir"))
+        self.objs.pop(self.objs.index("scripts/testdir/testfile.txt"))
 
     @attr(type='smoke')
     def test_create_and_delete_new_service(self):
         resp, body = self.create_new_service('test')
+        self.services.append('test')
         assert resp['status'] == '200'
         assert 'success' in body
         resp, body = self.delete_service('test')
         assert resp['status'] == '200'
         assert 'success' in body
+        self.services.pop(self.services.index('test'))
 
     @attr(type='smoke')
     def test_update_created_service(self):
         self.create_new_service('test')
+        self.services.append('test')
         resp, body = self.update_new_service('test')
         assert resp['status'] == '200'
         assert 'success' in body
         self.delete_service('test')
+        self.services.pop(self.services.index('test'))
 
     @attr(type='positive')
     def test_create_complex_service(self):
         resp, body, post_body = self.create_complex_service('test')
+        self.services.append('test')
         assert resp['status'] == '200'
         assert 'success' in body
         resp, body = self.get_metadata_object('services/test')
@@ -400,6 +473,7 @@ class SanityMuranoTest(base.MuranoMeta):
             if isinstance(k, list):
                 for j in k:
                     assert j in body
+        self.services.pop(self.services.index('test'))
 
     @attr(type='smoke')
     def test_get_list_all_services(self):
@@ -410,10 +484,12 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_switch_service_parameter(self):
         self.create_complex_service('test')
+        self.services.append('test')
         resp, body = self.switch_service_parameter('test')
         assert resp['status'] == '200'
         assert body['result'] == 'success'
         self.delete_service('test')
+        self.services.pop(self.services.index('test'))
 
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268976')
     @attr(type='negative')
@@ -430,11 +506,13 @@ class SanityMuranoTest(base.MuranoMeta):
     @attr(type='smoke')
     def test_get_meta_info_about_service(self):
         self.create_new_service('test')
+        self.services.append('test')
         resp, body = self.get_list_of_meta_information_about_service('test')
         self.delete_service('test')
         assert resp['status'] == '200'
         assert body['name'] == 'test'
         assert body['version'] == '0.1'
+        self.services.pop(self.services.index('test'))
 
     @attr(type='negative')
     def test_get_meta_info_about_nonexistent_service(self):

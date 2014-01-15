@@ -572,6 +572,23 @@ class MuranoMeta(tempest.test.BaseTestCase):
         cls.client.service = 'identity'
         cls.token = cls.client.get_auth()
         cls.client.base_url = cls.config.murano.murano_metadata
+        cls.objs = []
+        cls.services = []
+
+    def tearDown(self):
+
+        super(MuranoMeta, self).tearDown()
+
+        for obj in self.objs:
+            try:
+                self.delete_metadata_obj_or_folder(obj)
+            except Exception:
+                pass
+        for service in self.services:
+            try:
+                self.delete_service(service)
+            except Exception:
+                pass
 
     def get_ui_definitions(self):
         resp, body = self.client.get('v1/client/ui', self.client.headers)
@@ -625,7 +642,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
                      "service_display_name": name + "1"}
         post_body = json.dumps(post_body)
         resp, body = self.client.put('v1/admin/services/' + name,
-                                      post_body, self.client.headers)
+                                     post_body, self.client.headers)
         return resp, body
 
     def delete_service(self, name):
