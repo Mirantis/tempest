@@ -683,13 +683,6 @@ class MuranoMeta(tempest.test.BaseTestCase):
                                       service, post_body, self.client.headers)
         return resp, json.loads(body)
 
-    def switch_parameter_none_existing_service(self):
-        headers = {'X-Auth-Token': self.token}
-        resp = requests.post('%s/v1/admin/services/hupj/toggle_enabled' %
-                             self.client.base_url,
-                             headers=headers)
-        return resp
-
     def reset_cache(self):
         post_body = None
         resp, body = self.client.post('v1/admin/reset_caches', post_body,
@@ -701,9 +694,3 @@ class MuranoMeta(tempest.test.BaseTestCase):
                                      self.client.headers)
         return resp, json.loads(body)
 
-    def get_list_of_meta_info_about_none_existing_service(self):
-        headers = {'X-Auth-Token': self.token}
-        resp = requests.post('%s/v1/admin/services/hupj/info' %
-                             self.client.base_url,
-                             headers=headers)
-        return resp

@@ -356,8 +356,8 @@ class SanityMuranoTest(base.MuranoMeta):
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268976')
     @attr(type='negative')
     def test_switch_parameter_none_existing_service(self):
-        resp = self.switch_parameter_none_existing_service()
-        assert resp.status_code == 404
+        self.assertRaises(exceptions.NotFound, self.switch_service_parameter,
+                          'hupj')
 
     @attr(type='positive')
     def test_reset_cache(self):
@@ -375,6 +375,7 @@ class SanityMuranoTest(base.MuranoMeta):
         assert body['version'] == '0.1'
 
     @attr(type='negative')
-    def test_get_meta_info_about_none_existing_service(self):
-        resp = self.get_list_of_meta_info_about_none_existing_service()
-        assert resp.status_code == 404
+    def test_get_meta_info_about_nonexistent_service(self):
+        self.assertRaises(exceptions.NotFound,
+                          self.get_list_of_meta_information_about_service,
+                          "hupj")
