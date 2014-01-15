@@ -489,8 +489,14 @@ class RestClient(object):
         else:
             raise exceptions.RestClientException(str(resp.status))
 
-        if resp.status == 401 or resp.status == 403:
+        if resp.status == 401:
             raise exceptions.Unauthorized()
+
+        if resp.status == 403:
+            raise exceptions.Forbidden()
+
+        if resp.status == 405:
+            raise exceptions.MethodNotAllowed()
 
         if resp.status == 404:
             raise exceptions.NotFound(resp_body)

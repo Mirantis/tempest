@@ -65,6 +65,14 @@ class NotFound(RestClientException):
     message = "Object not found"
 
 
+class Forbidden(RestClientException):
+    message = "Forbidden"
+
+
+class MethodNotAllowed(RestClientException):
+    message = "Method not allowed"
+
+
 class Unauthorized(RestClientException):
     message = 'Unauthorized'
 
