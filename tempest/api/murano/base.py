@@ -576,7 +576,6 @@ class MuranoMeta(tempest.test.BaseTestCase):
         cls.services = []
 
     def tearDown(self):
-
         super(MuranoMeta, self).tearDown()
 
         for obj in self.objs:
@@ -584,6 +583,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
                 self.delete_metadata_obj_or_folder(obj)
             except Exception:
                 pass
+        
         for service in self.services:
             try:
                 self.delete_service(service)
