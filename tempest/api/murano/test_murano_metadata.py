@@ -133,7 +133,7 @@ class SanityMuranoTest(base.MuranoMeta):
     @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268934')
     @attr(type='negative')
     def test_create_directory_manifests(self):
-        self.assertRaises(exceptions.Forbidden, self.create_directory,
+        self.assertRaises(exceptions.Unauthorized, self.create_directory,
                           "manifests/", "testdir")
 
     @attr(type='negative')

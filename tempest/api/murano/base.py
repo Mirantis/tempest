@@ -583,7 +583,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
                 self.delete_metadata_obj_or_folder(obj)
             except Exception:
                 pass
-        
+
         for service in self.services:
             try:
                 self.delete_service(service)
