@@ -18,6 +18,7 @@ import testtools
 
 from tempest.api.murano import base
 from tempest.test import attr
+from tempest import exceptions
 
 
 class SanityMuranoTest(base.MuranoTest):
@@ -85,7 +86,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_AD,
+        self.assertRaises(exceptions.Unauthorized, self.create_AD,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -114,7 +115,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
-    def test_delete_without_session_id(self):
+    def test_delete_AD_without_session_id(self):
         """
         Try to delete AD without session id
         Target component: Murano
@@ -130,7 +131,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -198,7 +199,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_IIS,
+        self.assertRaises(exceptions.Unauthorized, self.create_IIS,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -243,7 +244,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -308,7 +309,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_apsnet,
+        self.assertRaises(exceptions.Unauthorized, self.create_apsnet,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -353,7 +354,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -421,7 +422,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_IIS_farm,
+        self.assertRaises(exceptions.Unauthorized, self.create_IIS_farm,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -466,7 +467,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS_farm(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -534,7 +535,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_apsnet_farm,
+        self.assertRaises(exceptions.Unauthorized, self.create_apsnet_farm,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -579,7 +580,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet_farm(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -647,7 +648,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_SQL,
+        self.assertRaises(exceptions.Unauthorized, self.create_SQL,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -692,7 +693,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_SQL(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -781,7 +782,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_telnet,
+        self.assertRaises(exceptions.Unauthorized, self.create_linux_telnet,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -827,7 +828,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_linux_telnet(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -895,7 +896,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_apache,
+        self.assertRaises(exceptions.Unauthorized, self.create_linux_apache,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -941,7 +942,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_linux_apache(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -1009,7 +1010,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_demo_service,
+        self.assertRaises(exceptions.Unauthorized, self.create_demo_service,
                           env['id'], "")
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -1055,7 +1056,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_demo_service(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.Unauthorized, self.delete_service,
                           env['id'], "", serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
