@@ -50,7 +50,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_AD_without_env_id(self):
         """
@@ -66,7 +65,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_AD,
+        self.assertRaises(exceptions.NotFound, self.create_AD,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -91,7 +90,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_AD_without_env_id(self):
         """
@@ -109,7 +107,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_AD(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -163,7 +161,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_IIS_without_env_id(self):
         """
@@ -179,7 +176,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_IIS,
+        self.assertRaises(exceptions.NotFound, self.create_IIS,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -204,7 +201,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_IIS_without_env_id(self):
         """
@@ -222,7 +218,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -273,7 +269,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_apsnet_without_env_id(self):
         """
@@ -289,7 +284,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_apsnet,
+        self.assertRaises(exceptions.NotFound, self.create_apsnet,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -314,7 +309,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_apsnet_without_env_id(self):
         """
@@ -332,7 +326,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -386,7 +380,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_IIS_farm_without_env_id(self):
         """
@@ -402,7 +395,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_IIS_farm,
+        self.assertRaises(exceptions.NotFound, self.create_IIS_farm,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -427,7 +420,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_IIS_farm_without_env_id(self):
         """
@@ -445,7 +437,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_IIS_farm(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -499,7 +491,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_apsnet_farm_without_env_id(self):
         """
@@ -515,7 +506,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_apsnet_farm,
+        self.assertRaises(exceptions.NotFound, self.create_apsnet_farm,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -540,7 +531,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_apsnet_farm_without_env_id(self):
         """
@@ -558,7 +548,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_apsnet_farm(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -612,7 +602,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_SQL_without_env_id(self):
         """
@@ -628,7 +617,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_SQL,
+        self.assertRaises(exceptions.NotFound, self.create_SQL,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -653,7 +642,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_SQL_without_env_id(self):
         """
@@ -671,7 +659,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_SQL(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -746,7 +734,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_linux_telnet_without_env_id(self):
         """
@@ -762,7 +749,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_telnet,
+        self.assertRaises(exceptions.NotFound, self.create_linux_telnet,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -787,7 +774,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_linux_telnet_without_env_id(self):
         """
@@ -806,7 +792,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_linux_telnet(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -860,7 +846,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_linux_apache_without_env_id(self):
         """
@@ -876,7 +861,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_linux_apache,
+        self.assertRaises(exceptions.NotFound, self.create_linux_apache,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -901,7 +886,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_linux_apache_without_env_id(self):
         """
@@ -920,7 +904,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_linux_apache(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -974,7 +958,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1227154')
     @attr(type='negative')
     def test_create_demo_service_without_env_id(self):
         """
@@ -990,7 +973,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(Exception, self.create_demo_service,
+        self.assertRaises(exceptions.NotFound, self.create_demo_service,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -1015,7 +998,6 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
 
-    @testtools.skip("Bug https://bugs.launchpad.net/murano/+bug/1227154")
     @attr(type='negative')
     def test_delete_demo_service_without_env_id(self):
         """
@@ -1034,7 +1016,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         resp, serv = self.create_demo_service(env['id'], sess['id'])
-        self.assertRaises(Exception, self.delete_service,
+        self.assertRaises(exceptions.NotFound, self.delete_service,
                           None, sess['id'], serv['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -1101,7 +1083,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
-        self.assertRaises(Exception, self.get_list_services,
+        self.assertRaises(exceptions.NotFound, self.get_list_services,
                           None, sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
@@ -1148,7 +1130,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.delete_environment(env['id'])
-        self.assertRaises(Exception, self.get_list_services,
+        self.assertRaises(exceptions.NotFound, self.get_list_services,
                           env['id'], sess['id'])
         self.environments.pop(self.environments.index(env))
 
@@ -1171,7 +1153,7 @@ class SanityMuranoTest(base.MuranoTest):
         resp, sess = self.create_session(env['id'])
         self.create_AD(env['id'], sess['id'])
         self.delete_session(env['id'], sess['id'])
-        self.assertRaises(Exception, self.get_list_services,
+        self.assertRaises(exceptions.NotFound, self.get_list_services,
                           env['id'], sess['id'])
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
