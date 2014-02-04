@@ -124,7 +124,7 @@ class OfficialClientManager(tempest.manager.Manager):
         if not password:
             password = self.config.identity.admin_password
         if not tenant_name:
-            tenant_name = self.config.identity.tenant_name
+            tenant_name = self.config.identity.admin_tenant_name
 
         self._validate_credentials(username, password, tenant_name)
 
@@ -655,7 +655,7 @@ class OrchestrationScenarioTest(OfficialClientTest):
     def credentials(cls):
         username = cls.config.identity.admin_username
         password = cls.config.identity.admin_password
-        tenant_name = cls.config.identity.tenant_name
+        tenant_name = cls.config.identity.admin_tenant_name
         return username, tenant_name, password
 
     def _load_template(self, base_file, file_name):
