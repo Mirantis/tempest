@@ -130,7 +130,6 @@ class SanityMuranoTest(base.MuranoMeta):
         assert body1['result'] == 'success'
         self.objs.pop(self.objs.index("scripts/testdir"))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268934')
     @attr(type='negative')
     def test_create_directory_manifests(self):
         self.assertRaises(exceptions.Unauthorized, self.create_directory,
@@ -264,14 +263,14 @@ class SanityMuranoTest(base.MuranoMeta):
         self.assertRaises(exceptions.NotFound, self.get_metadata_object,
                           "somth/blabla")
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_workflows(self):
         self.create_directory("workflows/", "testdir")
         self.objs.append("workflows/testdir")
         self.upload_metadata_object(path="workflows/testdir")
         self.objs.append("workflows/testdir/testfile.txt")
-        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
+        self.assertRaises(exceptions.Unauthorized,
+                          self.delete_metadata_obj_or_folder,
                           "workflows/testdir")
         self.delete_metadata_obj_or_folder("workflows/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("workflows/testdir")
@@ -299,15 +298,14 @@ class SanityMuranoTest(base.MuranoMeta):
         self.objs.pop(self.objs.index("workflows/testdir"))
         self.objs.pop(self.objs.index("workflows/testdir/testfile.txt"))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_ui(self):
         self.create_directory("ui/", "testdir")
         self.objs.append("ui/testdir")
         self.upload_metadata_object(path="ui/testdir")
         self.objs.append("ui/testdir/testfile.txt")
-        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
-                          "ui/testdir")
+        self.assertRaises(exceptions.Unauthorized,
+                          self.delete_metadata_obj_or_folder, "ui/testdir")
         self.delete_metadata_obj_or_folder("ui/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("ui/testdir")
         self.objs.pop(self.objs.index("ui/testdir"))
@@ -334,14 +332,14 @@ class SanityMuranoTest(base.MuranoMeta):
         self.objs.pop(self.objs.index("ui/testdir"))
         self.objs.pop(self.objs.index("ui/testdir/testfile.txt"))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_heat(self):
         self.create_directory("heat/", "testdir")
         self.objs.append("heat/testdir")
         self.upload_metadata_object(path="heat/testdir")
         self.objs.append("heat/testdir/testfile.txt")
-        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
+        self.assertRaises(exceptions.Unauthorized,
+                          self.delete_metadata_obj_or_folder,
                           "heat/testdir")
         self.delete_metadata_obj_or_folder("heat/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("heat/testdir")
@@ -369,14 +367,14 @@ class SanityMuranoTest(base.MuranoMeta):
         self.objs.pop(self.objs.index("heat/testdir"))
         self.objs.pop(self.objs.index("heat/testdir/testfile.txt"))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_agent(self):
         self.create_directory("agent/", "testdir")
         self.objs.append("agent/testdir")
         self.upload_metadata_object(path="agent/testdir")
         self.objs.append("agent/testdir/testfile.txt")
-        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
+        self.assertRaises(exceptions.Unauthorized,
+                          self.delete_metadata_obj_or_folder,
                           "agent/testdir")
         self.delete_metadata_obj_or_folder("agent/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("agent/testdir")
@@ -404,14 +402,14 @@ class SanityMuranoTest(base.MuranoMeta):
         self.objs.pop(self.objs.index("agent/testdir"))
         self.objs.pop(self.objs.index("agent/testdir/testfile.txt"))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1249303')
     @attr(type='negative')
     def test_delete_nonempty_folder_in_scripts(self):
         self.create_directory("scripts/", "testdir")
         self.objs.append("scripts/testdir")
         self.upload_metadata_object(path="scripts/testdir")
         self.objs.append("scripts/testdir/testfile.txt")
-        self.assertRaises(Exception, self.delete_metadata_obj_or_folder,
+        self.assertRaises(exceptions.Unauthorized,
+                          self.delete_metadata_obj_or_folder,
                           "scripts/testdir")
         self.delete_metadata_obj_or_folder("scripts/testdir/testfile.txt")
         self.delete_metadata_obj_or_folder("scripts/testdir")
@@ -491,11 +489,10 @@ class SanityMuranoTest(base.MuranoMeta):
         self.delete_service('test')
         self.services.pop(self.services.index('test'))
 
-    @testtools.skip('Bug https://bugs.launchpad.net/murano/+bug/1268976')
     @attr(type='negative')
     def test_switch_parameter_none_existing_service(self):
         self.assertRaises(exceptions.NotFound, self.switch_service_parameter,
-                          'hupj')
+                          'iwld')
 
     @attr(type='positive')
     def test_reset_cache(self):
