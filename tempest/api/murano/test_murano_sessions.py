@@ -33,17 +33,18 @@ class SanityMuranoTest(base.MuranoTest):
         Scenario:
             1. Send request to create environment.
             2. Send request to create session
-            3. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
+
         resp, sess = self.create_session(env['id'])
-        assert resp['status'] == '200'
+
+        self.assertEqual(resp.status, 200)
+
         resp, infa = self.get_session_info(env['id'], sess['id'])
-        assert resp['status'] == '200'
-        assert infa['environment_id'] == env['id']
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
+
+        self.assertEqual(resp.status, 200)
+        self.assertEqual(infa['environment_id'], env['id'])
 
     @attr(type='negative')
     def test_create_session_before_env(self):
@@ -54,46 +55,46 @@ class SanityMuranoTest(base.MuranoTest):
         Scenario:
         1. Send request to create session
         """
-        self.assertRaises(exceptions.NotFound, self.create_session,
+        self.assertRaises(exceptions.NotFound,
+                          self.create_session,
                           None)
 
     @attr(type='negative')
     def test_delete_session_with_wrong_env_id(self):
         """
-        Try to delete session using uncorrect env_id
+        Try to delete session using incorrect env_id
         Target component: Murano
 
         Scenario:
         1. Send request to create environment
         2. Send request to create session
-        3. Send request to delete session using uncorrect env_id
-        4. Send request to delete environment
+        3. Send request to delete session using incorrect env_id
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.assertRaises(exceptions.NotFound, self.delete_session, None,
+
+        self.assertRaises(exceptions.NotFound,
+                          self.delete_session,
+                          None,
                           sess['id'])
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_create_session_with_wrong_env_id(self):
         """
-        Try to create session using uncorrect env_id
+        Try to create session using incorrect env_id
         Target component: Murano
 
         Scenario:
         1. Send request to create environment
-        2. Send request to create session using uncorrect env_id
-        3. Send request to delete environment
+        2. Send request to create session using incorrect env_id
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
-        self.assertRaises(exceptions.NotFound, self.create_session,
+
+        self.assertRaises(exceptions.NotFound,
+                          self.create_session,
                           None)
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_get_session_info_wo_env_id(self):
@@ -105,15 +106,14 @@ class SanityMuranoTest(base.MuranoTest):
         1. Send request to create environment
         2. Send request to create session
         3. Send request to get info about session using wrong id
-        4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
+
         resp, sess = self.create_session(env['id'])
+
         self.assertRaises(exceptions.NotFound, self.get_session_info,
                           None, sess['id'])
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_get_session_info_after_delete_env(self):
@@ -129,11 +129,16 @@ class SanityMuranoTest(base.MuranoTest):
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
+
         resp, sess = self.create_session(env['id'])
+
         self.delete_environment(env['id'])
         self.environments.pop(self.environments.index(env))
-        self.assertRaises(exceptions.NotFound, self.get_session_info,
-                          env['id'], sess['id'])
+
+        self.assertRaises(exceptions.NotFound,
+                          self.get_session_info,
+                          env['id'],
+                          sess['id'])
 
     @attr(type='smoke')
     def test_get_session_info(self):
@@ -147,16 +152,15 @@ class SanityMuranoTest(base.MuranoTest):
             1. Send request to create environment.
             2. Send request to create session
             3. Send request to get info about created session
-            4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
+
         resp, sess = self.create_session(env['id'])
         resp, infa = self.get_session_info(env['id'], sess['id'])
-        assert resp['status'] == '200'
-        assert infa['environment_id'] == env['id']
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
+
+        self.assertEqual(resp.status, 200)
+        self.assertEqual(infa['environment_id'], env['id'])
 
     @attr(type='smoke')
     def test_delete_session(self):
@@ -170,14 +174,11 @@ class SanityMuranoTest(base.MuranoTest):
             1. Send request to create environment.
             2. Send request to create session
             3. Send request to delete created session
-            4. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
         self.delete_session(env['id'], sess['id'])
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
 
     @attr(type='negative')
     def test_double_delete_session(self):
@@ -190,13 +191,14 @@ class SanityMuranoTest(base.MuranoTest):
         2. Send request to create session
         3. Send request to delete session
         4. Send request to delete session
-        5. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
+
         resp, sess = self.create_session(env['id'])
         self.delete_session(env['id'], sess['id'])
-        self.assertRaises(exceptions.NotFound, self.delete_session, env['id'],
+
+        self.assertRaises(exceptions.NotFound,
+                          self.delete_session,
+                          env['id'],
                           sess['id'])
-        self.delete_environment(env['id'])
-        self.environments.pop(self.environments.index(env))
