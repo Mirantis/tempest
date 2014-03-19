@@ -86,6 +86,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                 self.delete_environment(environment['id'])
             except exceptions.TearDownException:
                 pass
+
         for inst in self.inst_wth_fl_ip:
             try:
                 self.remove_floating_ip(inst)
@@ -115,7 +116,7 @@ class MuranoTest(tempest.test.BaseTestCase):
             Input parameters:
               environment_id - ID of deleting environment
         """
-        self.client.delete('environments/%s' % str(environment_id),
+        self.client.delete('environments/{0}'.format(environment_id),
                            self.client.headers)
 
     def update_environment(self, environment_id, environment_name):
@@ -127,7 +128,7 @@ class MuranoTest(tempest.test.BaseTestCase):
               environment_name - name of updating environment
         """
         post_body = '{"name": "%s"}' % (environment_name + "-changed")
-        resp, body = self.client.put('environments/%s' % str(environment_id),
+        resp, body = self.client.put('environments/{0}'.format(environment_id),
                                      post_body, self.client.headers)
         return resp, json.loads(body)
 
@@ -149,7 +150,7 @@ class MuranoTest(tempest.test.BaseTestCase):
               environment_id - ID of needed environment
             Returns response and environment's info
         """
-        resp, body = self.client.get('environments/%s' % str(environment_id),
+        resp, body = self.client.get('environments/{0}'.format(environment_id),
                                      self.client.headers)
         return resp, json.loads(body)
 
@@ -200,9 +201,13 @@ class MuranoTest(tempest.test.BaseTestCase):
                    where session should be created
         """
         post_body = None
-        resp, body = self.client.post('environments/%s/configure'
-                                      % str(environment_id),
-                                      post_body, self.client.headers)
+
+        resp, body = self.client.post(
+            'environments/{0}/configure'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
+
         return resp, json.loads(body)
 
     def get_session_info(self, environment_id, session_id):
@@ -215,9 +220,11 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of needed session
             Return response and session's info
         """
-        resp, body = self.client.get('environments/%s/sessions/%s'
-                                     % (str(environment_id), str(session_id)),
-                                     self.client.headers)
+        resp, body = self.client.get(
+            'environments/{0}/sessions/{1}'.format(environment_id, session_id),
+            self.client.headers
+        )
+
         return resp, json.loads(body)
 
     def delete_session(self, environment_id, session_id):
@@ -229,9 +236,10 @@ class MuranoTest(tempest.test.BaseTestCase):
                              where needed session was created
               session_id - ID of needed session
         """
-        self.client.delete('environments/%s/sessions/%s'
-                           % (str(environment_id), str(session_id)),
-                           self.client.headers)
+        self.client.delete(
+            'environments/{0}/sessions/{1}'.format(environment_id, session_id),
+            self.client.headers
+        )
 
     def create_AD(self, environment_id, session_id):
         """
@@ -267,10 +275,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -305,10 +314,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -344,10 +354,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -382,10 +393,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -422,10 +434,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -461,10 +474,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -522,10 +536,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -556,10 +571,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -590,10 +606,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -623,10 +640,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(post_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.post('environments/%s/services'
-                                      % str(environment_id),
-                                      post_body,
-                                      self.client.headers)
+        resp, body = self.client.post(
+            'environments/{0}/services'.format(environment_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -641,9 +659,10 @@ class MuranoTest(tempest.test.BaseTestCase):
         """
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        self.client.delete('environments/%s/services/%s'
-                           % (str(environment_id), str(service_id)),
-                           self.client.headers)
+        self.client.delete(
+            'environments/{0}/services/{1}'.format(environment_id, service_id),
+            self.client.headers
+        )
 
     def get_list_services(self, environment_id, session_id):
         """
@@ -654,9 +673,12 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         self.client.headers.update({'X-Configuration-Session': session_id})
-        resp, body = self.client.get('environments/' + str(environment_id) +
-                                     '/services',
-                                     self.client.headers)
+
+        resp, body = self.client.get(
+            'environments/{0}/services'.format(environment_id),
+            self.client.headers
+        )
+
         return resp, json.loads(body)
 
     def get_service_info(self, environment_id, session_id, service_id):
@@ -670,9 +692,10 @@ class MuranoTest(tempest.test.BaseTestCase):
         """
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.get('environments/%s/services/%s'
-                                     % (str(environment_id), str(service_id)),
-                                     self.client.headers)
+        resp, body = self.client.get(
+            'environments/{0}/services/{1}'.format(environment_id, service_id),
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -690,10 +713,11 @@ class MuranoTest(tempest.test.BaseTestCase):
         post_body = json.dumps(s_body)
         self.client.headers.update({'X-Configuration-Session': session_id})
 
-        resp, body = self.client.put('environments/%s/services/%s'
-                                     % (str(environment_id), str(service_id)),
-                                     post_body,
-                                     self.client.headers)
+        resp, body = self.client.put(
+            'environments/{0}/services/{1}'.format(environment_id, service_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -707,10 +731,12 @@ class MuranoTest(tempest.test.BaseTestCase):
         """
         post_body = None
 
-        resp = self.client.post('environments/%s/sessions/%s/deploy'
-                                % (str(environment_id), str(session_id)),
-                                post_body,
-                                self.client.headers)
+        resp = self.client.post(
+            'environments/{0}/sessions/{1}/deploy'.format(environment_id,
+                                                          session_id),
+            post_body,
+            self.client.headers
+        )
 
         return resp
 
@@ -721,9 +747,10 @@ class MuranoTest(tempest.test.BaseTestCase):
             Input parameters:
               environment_id - ID of current environment
         """
-        resp, body = self.client.get('environments/%s/deployments'
-                                     % str(environment_id),
-                                     self.client.headers)
+        resp, body = self.client.get(
+            'environments/{0}/deployments'.format(environment_id),
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -735,10 +762,11 @@ class MuranoTest(tempest.test.BaseTestCase):
               environment_id - ID of current environment
               deployment_id - ID of needed deployment
         """
-        resp, body = self.client.get('environments/%s/deployments/%s'
-                                     % (str(environment_id),
-                                        str(deployment_id)),
-                                     self.client.headers)
+        resp, body = self.client.get(
+            'environments/{0}/deployments/{1}'.format(environment_id,
+                                                      deployment_id),
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -749,13 +777,16 @@ class MuranoMeta(tempest.test.BaseTestCase):
     def setUpClass(cls):
 
         super(MuranoMeta, cls).setUpClass()
+
         if not cls.config.service_available.murano:
             raise cls.skipException("Murano tests is disabled")
+
         user = cls.config.identity.admin_username
         password = cls.config.identity.admin_password
         tenant = cls.config.identity.admin_tenant_name
         auth_url = cls.config.identity.uri
         client_args = (cls.config, user, password, auth_url, tenant)
+
         cls.client = rest_client.RestClient(*client_args)
         cls.client.service = 'identity'
         cls.token = cls.client.get_auth()
@@ -793,12 +824,14 @@ class MuranoMeta(tempest.test.BaseTestCase):
         return resp, body
 
     def get_list_metadata_objects(self, path):
-        resp, body = self.client.get('admin/%s' % path, self.client.headers)
+        resp, body = self.client.get('admin/{0}'.format(path),
+                                     self.client.headers)
 
         return resp, json.loads(body)
 
     def get_metadata_object(self, object):
-        resp, body = self.client.get('admin/%s' % object, self.client.headers)
+        resp, body = self.client.get('admin/{0}'.format(object),
+                                     self.client.headers)
 
         return resp, body
 
@@ -809,21 +842,28 @@ class MuranoMeta(tempest.test.BaseTestCase):
         files = {'file': open(filename, 'rb')}
         headers = {'X-Auth-Token': self.token}
 
-        resp = requests.post('%s/admin/%s' % (self.client.base_url, path),
-                             files=files, headers=headers)
+        resp = requests.post(
+            '{0}/admin/{1}'.format(self.client.base_url, path),
+            files=files,
+            headers=headers
+        )
 
         os.remove(filename)
         return resp
 
     def create_directory(self, path, name):
         post_body = None
-        resp, body = self.client.put('admin/%s' % (path + name), post_body,
+
+        resp, body = self.client.put('admin/{0}'.format(path + name),
+                                     post_body,
                                      self.client.headers)
+
         return resp, json.loads(body)
 
     def delete_metadata_obj_or_folder(self, object):
-        resp, body = self.client.delete('admin/%s' % object,
+        resp, body = self.client.delete('admin/{0}'.format(object),
                                         self.client.headers)
+
         return resp, json.loads(body)
 
     def create_new_service(self, name):
@@ -836,7 +876,8 @@ class MuranoMeta(tempest.test.BaseTestCase):
 
         post_body = json.dumps(post_body)
 
-        resp, body = self.client.put('admin/services/%s' % name, post_body,
+        resp, body = self.client.put('admin/services/{0}'.format(name),
+                                     post_body,
                                      self.client.headers)
 
         return resp, body
@@ -851,13 +892,13 @@ class MuranoMeta(tempest.test.BaseTestCase):
 
         post_body = json.dumps(post_body)
 
-        resp, body = self.client.put('admin/services/%s' % name,
+        resp, body = self.client.put('admin/services/{0}'.format(name),
                                      post_body, self.client.headers)
 
         return resp, body
 
     def delete_service(self, name):
-        resp, body = self.client.delete('admin/services/%s' % name,
+        resp, body = self.client.delete('admin/services/{0}'.format(name),
                                         self.client.headers)
 
         return resp, body
@@ -907,7 +948,8 @@ class MuranoMeta(tempest.test.BaseTestCase):
 
         post_body = json.dumps(post_body)
 
-        resp, body = self.client.put('admin/services/%s' % name, post_body,
+        resp, body = self.client.put('admin/services/{0}'.format(name),
+                                     post_body,
                                      self.client.headers)
 
         return resp, body, json.loads(post_body)
@@ -915,8 +957,11 @@ class MuranoMeta(tempest.test.BaseTestCase):
     def switch_service_parameter(self, service):
         post_body = None
 
-        resp, body = self.client.post('admin/services/%s/toggle_enabled' %
-                                      service, post_body, self.client.headers)
+        resp, body = self.client.post(
+            'admin/services/{0}/toggle_enabled'.format(service),
+            post_body,
+            self.client.headers
+        )
 
         return resp, json.loads(body)
 
@@ -929,7 +974,7 @@ class MuranoMeta(tempest.test.BaseTestCase):
         return resp, json.loads(body)
 
     def get_list_of_meta_information_about_service(self, service):
-        resp, body = self.client.get('admin/services/%s/info' % service,
+        resp, body = self.client.get('admin/services/{0}/info'.format(service),
                                      self.client.headers)
 
         return resp, json.loads(body)
