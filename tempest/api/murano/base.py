@@ -322,9 +322,9 @@ class MuranoTest(tempest.test.BaseTestCase):
 
         return resp, json.loads(body)
 
-    def create_apsnet(self, environment_id, session_id, domain_name=""):
+    def create_aspnet(self, environment_id, session_id, domain_name=""):
         """
-            This method allow to add apsnet
+            This method allow to add aspnet
 
             Input parameters:
               environment_id - ID of current environment
@@ -401,9 +401,9 @@ class MuranoTest(tempest.test.BaseTestCase):
 
         return resp, json.loads(body)
 
-    def create_apsnet_farm(self, environment_id, session_id, domain_name=""):
+    def create_aspnet_farm(self, environment_id, session_id, domain_name=""):
         """
-            This method allow to add apsnet farm
+            This method allow to add aspnet farm
 
             Input parameters:
               environment_id - ID of current environment
@@ -413,7 +413,7 @@ class MuranoTest(tempest.test.BaseTestCase):
             "type": "aspNetAppFarm",
             "domain": domain_name,
             "availabilityZone": "nova",
-            "name": "SomeApsFarm",
+            "name": "SomeAspFarm",
             "repository": "git://github.com/Mirantis/murano-mvc-demo.git",
             "adminPassword": "P@ssw0rd",
             "loadBalancerPort": 80,

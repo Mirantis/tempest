@@ -366,7 +366,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 1)
 
-        self.create_apsnet_farm(env['id'], sess3['id'])
+        self.create_aspnet_farm(env['id'], sess3['id'])
         resp, infa = self.get_list_services(env['id'], sess3['id'])
 
         self.assertEqual(len(infa), 2)
@@ -420,7 +420,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 1)
 
-        self.create_apsnet_farm(env['id'], sess['id'])
+        self.create_aspnet_farm(env['id'], sess['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 2)
@@ -453,7 +453,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
 
         resp, sess = self.create_session(env['id'])
-        self.create_apsnet_farm(env['id'], sess['id'])
+        self.create_aspnet_farm(env['id'], sess['id'])
 
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
@@ -514,7 +514,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 4)
 
-        self.create_apsnet_farm(env['id'], sess['id'], serv2['domain'])
+        self.create_aspnet_farm(env['id'], sess['id'], serv2['domain'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 5)
@@ -538,7 +538,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
 
         resp, sess = self.create_session(env['id'])
-        resp, serv1 = self.create_apsnet(env['id'], sess['id'])
+        resp, serv1 = self.create_aspnet(env['id'], sess['id'])
 
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
@@ -617,7 +617,7 @@ class SanityMuranoTest(base.MuranoTest):
         self.environments.append(env)
 
         resp, sess = self.create_session(env['id'])
-        self.create_apsnet(env['id'], sess['id'])
+        self.create_aspnet(env['id'], sess['id'])
 
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
@@ -638,7 +638,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 4)
 
-        self.create_apsnet(env['id'], sess['id'])
+        self.create_aspnet(env['id'], sess['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 5)
@@ -678,7 +678,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 2)
 
-        self.create_apsnet_farm(env['id'], sess['id'])
+        self.create_aspnet_farm(env['id'], sess['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 3)
