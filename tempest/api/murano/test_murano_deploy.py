@@ -234,23 +234,23 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
 
     @attr(type='positive')
-    def test_create_and_deploying_apsnet(self):
+    def test_create_and_deploying_aspnet(self):
         """
-        Create and deploy apsnet
+        Create and deploy aspnet
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add apsnet
-            4. Send request to deploy apsnet
+            3. Send request to add aspnet
+            4. Send request to deploy aspnet
             5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.create_apsnet(env['id'], sess['id'])
+        self.create_aspnet(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
@@ -315,23 +315,23 @@ class SanityMuranoTest(base.MuranoTest):
         self.delete_environment(env['id'])
 
     @attr(type='positive')
-    def test_create_and_deploying_apsnet_farm(self):
+    def test_create_and_deploying_aspnet_farm(self):
         """
-        Create and deploy apsnet farm
+        Create and deploy aspnet farm
         Target component: Murano
 
         Scenario:
             1. Send request to create environment
             2. Send request to create session
-            3. Send request to add apsnet farm
-            4. Send request to deploy apsnet farm
+            3. Send request to add aspnet farm
+            4. Send request to deploy aspnet farm
             5. Send request to get info for check deployment status
             6. Send request to delete environment
         """
         resp, env = self.create_environment('test')
         self.environments.append(env)
         resp, sess = self.create_session(env['id'])
-        self.create_apsnet_farm(env['id'], sess['id'])
+        self.create_aspnet_farm(env['id'], sess['id'])
         self.deploy_session(env['id'], sess['id'])
         self.get_session_info(env['id'], sess['id'])
         env.update({'status': None})
