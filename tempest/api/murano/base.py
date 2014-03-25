@@ -84,13 +84,13 @@ class MuranoTest(tempest.test.BaseTestCase):
         for environment in self.environments:
             try:
                 self.delete_environment(environment['id'])
-            except exceptions.TearDownException:
+            except exceptions.NotFound:
                 pass
 
         for inst in self.inst_wth_fl_ip:
             try:
                 self.remove_floating_ip(inst)
-            except exceptions.TearDownException:
+            except exceptions.NotFound:
                 pass
 
     def create_environment(self, name):
