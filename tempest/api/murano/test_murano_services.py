@@ -48,12 +48,13 @@ class SanityMuranoTest(base.MuranoTest):
         self.assertEqual(resp.status, 200)
         self.assertEqual(len(infa) - len(info), 1)
 
-        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        resp, infa = self.get_service_info(env['id'], sess['id'],
+                                           serv['?']['id'])
 
         self.assertEqual(resp.status, 200)
         self.assertEqual(infa['name'], 'ad.local')
 
-        self.delete_service(env['id'], sess['id'], serv['id'])
+        self.delete_service(env['id'], sess['id'], serv['?']['id'])
         _, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), len(info))
@@ -123,7 +124,7 @@ class SanityMuranoTest(base.MuranoTest):
                           self.delete_service,
                           None,
                           sess['id'],
-                          serv['id'])
+                          serv['?']['id'])
 
     @attr(type='negative')
     def test_delete_AD_without_session_id(self):
@@ -148,7 +149,7 @@ class SanityMuranoTest(base.MuranoTest):
                           self.delete_service,
                           env['id'],
                           "",
-                          serv['id'])
+                          serv['?']['id'])
 
     @attr(type='smoke')
     def test_get_list_services(self):
@@ -290,8 +291,8 @@ class SanityMuranoTest(base.MuranoTest):
 
         resp, serv = self.create_AD(env['id'], sess['id'])
 
-        self.update_service(env['id'], sess['id'], serv['id'], serv)
-        self.delete_service(env['id'], sess['id'], serv['id'])
+        self.update_service(env['id'], sess['id'], serv['?']['id'], serv)
+        self.delete_service(env['id'], sess['id'], serv['?']['id'])
 
     @attr(type='smoke')
     def test_get_service_info(self):
@@ -312,7 +313,8 @@ class SanityMuranoTest(base.MuranoTest):
 
         resp, serv = self.create_AD(env['id'], sess['id'])
 
-        resp, infa = self.get_service_info(env['id'], sess['id'], serv['id'])
+        resp, infa = self.get_service_info(env['id'], sess['id'],
+                                           serv['?']['id'])
 
         self.assertEqual(resp.status, 200)
         self.assertEqual(infa['name'], 'ad.local')
@@ -386,7 +388,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 5)
 
-        self.delete_service(env['id'], sess1['id'], serv2['id'])
+        self.delete_service(env['id'], sess1['id'], serv2['?']['id'])
         resp, infa = self.get_list_services(env['id'], sess1['id'])
 
         self.assertEqual(len(infa), 2)
@@ -549,7 +551,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 2)
 
-        self.delete_service(env['id'], sess['id'], serv1['id'])
+        self.delete_service(env['id'], sess['id'], serv1['?']['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 1)
@@ -559,7 +561,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 2)
 
-        self.delete_service(env['id'], sess['id'], serv2['id'])
+        self.delete_service(env['id'], sess['id'], serv2['?']['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 1)
@@ -683,7 +685,7 @@ class SanityMuranoTest(base.MuranoTest):
 
         self.assertEqual(len(infa), 3)
 
-        self.delete_service(env['id'], sess['id'], serv1['id'])
+        self.delete_service(env['id'], sess['id'], serv1['?']['id'])
         resp, infa = self.get_list_services(env['id'], sess['id'])
 
         self.assertEqual(len(infa), 2)
@@ -712,13 +714,13 @@ class SanityMuranoTest(base.MuranoTest):
         resp, sess = self.create_session(env['id'])
         resp, serv1 = self.create_IIS(env['id'], sess['id'])
 
-        self.delete_service(env['id'], sess['id'], serv1['id'])
+        self.delete_service(env['id'], sess['id'], serv1['?']['id'])
 
         self.assertRaises(Exception,
                           self.delete_service,
                           env['id'],
                           sess['id'],
-                          serv1['id'])
+                          serv1['?']['id'])
 
     @attr(type='smoke')
     def test_get_list_services_of_empty_environment(self):

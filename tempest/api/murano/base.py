@@ -18,6 +18,8 @@
 import json
 import socket
 import requests
+import uuid
+
 import os
 import novaclient.v1_1.client as nvclient
 import tempest.test
@@ -250,7 +252,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "activeDirectory",
+            '?': {
+                'type': "io.murano.tests.activeDirectory",
+                'id': uuid.uuid4().hex
+            },
             "name": "ad.local",
             "adminPassword": "P@ssw0rd",
             "domain": "ad.local",
@@ -261,15 +266,13 @@ class MuranoTest(tempest.test.BaseTestCase):
                 "type": "ws-2012-std",
                 "name": self.windows,
                 "title": "Windows Server 2012 Standard"
-                },
+            },
             "configuration": "standalone",
-            "units": [
-                {
-                    "isMaster": True,
-                    "recoveryPassword": "P@ssw0rd",
-                    "location": "west-dc"
-                }
-            ]
+            "units": [{
+                "isMaster": True,
+                "recoveryPassword": "P@ssw0rd",
+                "location": "west-dc"
+            }]
         }
 
         post_body = json.dumps(post_body)
@@ -292,7 +295,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "webServer",
+            '?': {
+                'type': "io.murano.tests.webServer",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "availabilityZone": "nova",
             "name": "IISSERVICE",
@@ -331,7 +337,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "aspNetApp",
+            '?': {
+                'type': "io.murano.tests.aspNetApp",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "availabilityZone": "nova",
             "name": "someasp",
@@ -371,7 +380,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "webServerFarm",
+            '?': {
+                'type': "io.murano.tests.webServerFarm",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "availabilityZone": "nova",
             "name": "someIISFARM",
@@ -379,7 +391,8 @@ class MuranoTest(tempest.test.BaseTestCase):
             "loadBalancerPort": 80,
             "unitNamingPattern": "",
             "osImage": {
-                "type": "ws-2012-std", "name": self.windows,
+                "type": "ws-2012-std",
+                "name": self.windows,
                 "title": "Windows Server 2012 Standard"
             },
             "units": [{}, {}],
@@ -410,10 +423,13 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "aspNetAppFarm",
+            '?': {
+                'type': "io.murano.tests.aspNetAppFarm",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "availabilityZone": "nova",
-            "name": "SomeAspFarm",
+            "name": "SomeApsFarm",
             "repository": "git://github.com/Mirantis/murano-mvc-demo.git",
             "adminPassword": "P@ssw0rd",
             "loadBalancerPort": 80,
@@ -451,7 +467,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
-            "type": "msSqlServer",
+            '?': {
+                'type': "io.murano.tests.msSqlServer",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "availabilityZone": "nova",
             "name": "SQLSERVER",
@@ -467,7 +486,8 @@ class MuranoTest(tempest.test.BaseTestCase):
             "units": [{}],
             "credentials": {
                 "username": "Administrator",
-                "password": "P@ssw0rd"},
+                "password": "P@ssw0rd"
+            },
             "flavor": "m1.medium"
         }
 
@@ -494,6 +514,10 @@ class MuranoTest(tempest.test.BaseTestCase):
         clIP = self.config.murano.clusterIP
 
         post_body = {
+            '?': {
+                'type': "io.murano.tests.msSqlClusterServer",
+                'id': uuid.uuid4().hex
+            },
             "domain": domain_name,
             "domainAdminPassword": "P@ssw0rd",
             "externalAD": False,
@@ -510,7 +534,6 @@ class MuranoTest(tempest.test.BaseTestCase):
             "domainAdminUserName": "Administrator",
             "agListenerIP": AG,
             "clusterIP": clIP,
-            "type": "msSqlClusterServer",
             "availabilityZone": "nova",
             "adminPassword": "P@ssw0rd",
             "clusterName": "SomeSQL",
@@ -553,6 +576,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
+            '?': {
+                'type': "io.murano.tests.linuxTelnetService",
+                'id': uuid.uuid4().hex
+            },
             "availabilityZone": "nova",
             "name": "LinuxTelnet",
             "deployTelnet": True,
@@ -564,8 +591,7 @@ class MuranoTest(tempest.test.BaseTestCase):
                 "title": "Linux Image"
             },
             "units": [{}],
-            "flavor": "m1.small",
-            "type": "linuxTelnetService"
+            "flavor": "m1.small"
         }
 
         post_body = json.dumps(post_body)
@@ -588,6 +614,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
+            '?': {
+                'type': "io.murano.tests.linuxApacheService",
+                'id': uuid.uuid4().hex
+            },
             "availabilityZone": "nova",
             "name": "LinuxApache",
             "deployApachePHP": True,
@@ -595,12 +625,12 @@ class MuranoTest(tempest.test.BaseTestCase):
             "keyPair": "murano-lb-key",
             "instanceCount": [{}],
             "osImage": {
-                "type": "linux", "name": self.linux,
+                "type": "linux",
+                "name": self.linux,
                 "title": "Linux Image"
             },
             "units": [{}],
-            "flavor": "m1.small",
-            "type": "linuxApacheService"
+            "flavor": "m1.small"
         }
 
         post_body = json.dumps(post_body)
@@ -623,6 +653,10 @@ class MuranoTest(tempest.test.BaseTestCase):
               session_id - ID of current session
         """
         post_body = {
+            '?': {
+                'type': "io.murano.tests.demoService",
+                'id': uuid.uuid4().hex
+            },
             "availabilityZone": "nova",
             "name": "demo",
             "unitNamingPattern": "host",
@@ -633,8 +667,7 @@ class MuranoTest(tempest.test.BaseTestCase):
             },
             "units": [{}],
             "flavor": "m1.small",
-            "configuration": "standalone",
-            "type": "demoService"
+            "configuration": "standalone"
         }
 
         post_body = json.dumps(post_body)

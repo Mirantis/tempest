@@ -14,6 +14,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import testtools
+
 from tempest.api.murano import base
 from tempest.test import attr
 from tempest import exceptions
@@ -125,6 +127,7 @@ class SanityMuranoTest(base.MuranoTest):
                           None,
                           env['name'])
 
+    @testtools.skip("https://bugs.launchpad.net/murano/+bug/1301181")
     @attr(type='smoke')
     def test_update_env_after_begin_of_deploy(self):
         """
