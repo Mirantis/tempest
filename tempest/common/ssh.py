@@ -1,6 +1,4 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
-# Copyright 2012 OpenStack, LLC
+# Copyright 2012 OpenStack Foundation
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -16,19 +14,24 @@
 #    under the License.
 
 
-from cStringIO import StringIO
+import cStringIO
 import select
 import socket
 import time
 import warnings
 
+import six
+
 from tempest import exceptions
+from tempest.openstack.common import log as logging
 
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     import paramiko
-    from paramiko import RSAKey
+
+
+LOG = logging.getLogger(__name__)
 
 
 class Client(object):
@@ -38,8 +41,9 @@ class Client(object):
         self.host = host
         self.username = username
         self.password = password
-        if isinstance(pkey, basestring):
-            pkey = RSAKey.from_private_key(StringIO(str(pkey)))
+        if isinstance(pkey, six.string_types):
+            pkey = paramiko.RSAKey.from_private_key(
+                cStringIO.StringIO(str(pkey)))
         self.pkey = pkey
         self.look_for_keys = look_for_keys
         self.key_filename = key_filename
@@ -47,50 +51,51 @@ class Client(object):
         self.channel_timeout = float(channel_timeout)
         self.buf_size = 1024
 
-    def _get_ssh_connection(self):
+    def _get_ssh_connection(self, sleep=1.5, backoff=1):
         """Returns an ssh connection to the specified host."""
-        _timeout = True
+        bsleep = sleep
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(
             paramiko.AutoAddPolicy())
         _start_time = time.time()
-
-        while not self._is_timed_out(self.timeout, _start_time):
+        if self.pkey is not None:
+            LOG.info("Creating ssh connection to '%s' as '%s'"
+                     " with public key authentication",
+                     self.host, self.username)
+        else:
+            LOG.info("Creating ssh connection to '%s' as '%s'"
+                     " with password %s",
+                     self.host, self.username, str(self.password))
+        attempts = 0
+        while True:
             try:
                 ssh.connect(self.host, username=self.username,
                             password=self.password,
                             look_for_keys=self.look_for_keys,
                             key_filename=self.key_filename,
-                            timeout=self.timeout, pkey=self.pkey)
-                _timeout = False
-                break
-            except socket.error:
-                continue
-            except paramiko.AuthenticationException:
-                time.sleep(5)
-                continue
-        if _timeout:
-            raise exceptions.SSHTimeout(host=self.host,
-                                        user=self.username,
-                                        password=self.password)
-        return ssh
+                            timeout=self.channel_timeout, pkey=self.pkey)
+                LOG.info("ssh connection to %s@%s successfuly created",
+                         self.username, self.host)
+                return ssh
+            except (socket.error,
+                    paramiko.SSHException) as e:
+                if self._is_timed_out(_start_time):
+                    LOG.exception("Failed to establish authenticated ssh"
+                                  " connection to %s@%s after %d attempts",
+                                  self.username, self.host, attempts)
+                    raise exceptions.SSHTimeout(host=self.host,
+                                                user=self.username,
+                                                password=self.password)
+                bsleep += backoff
+                attempts += 1
+                LOG.warning("Failed to establish authenticated ssh"
+                            " connection to %s@%s (%s). Number attempts: %s."
+                            " Retry after %d seconds.",
+                            self.username, self.host, e, attempts, bsleep)
+                time.sleep(bsleep)
 
-    def _is_timed_out(self, timeout, start_time):
-        return (time.time() - timeout) > start_time
-
-    def connect_until_closed(self):
-        """Connect to the server and wait until connection is lost."""
-        try:
-            ssh = self._get_ssh_connection()
-            _transport = ssh.get_transport()
-            _start_time = time.time()
-            _timed_out = self._is_timed_out(self.timeout, _start_time)
-            while _transport.is_active() and not _timed_out:
-                time.sleep(5)
-                _timed_out = self._is_timed_out(self.timeout, _start_time)
-            ssh.close()
-        except (EOFError, paramiko.AuthenticationException, socket.error):
-            return
+    def _is_timed_out(self, start_time):
+        return (time.time() - self.timeout) > start_time
 
     def exec_command(self, cmd):
         """
@@ -106,19 +111,24 @@ class Client(object):
         ssh = self._get_ssh_connection()
         transport = ssh.get_transport()
         channel = transport.open_session()
+        channel.fileno()  # Register event pipe
         channel.exec_command(cmd)
         channel.shutdown_write()
         out_data = []
         err_data = []
+        poll = select.poll()
+        poll.register(channel, select.POLLIN)
+        start_time = time.time()
 
-        select_params = [channel], [], [], self.channel_timeout
         while True:
-            ready = select.select(*select_params)
+            ready = poll.poll(self.channel_timeout)
             if not any(ready):
+                if not self._is_timed_out(start_time):
+                    continue
                 raise exceptions.TimeoutException(
-                        "Command: '{0}' executed on host '{1}'.".format(
-                            cmd, self.host))
-            if not ready[0]:        # If there is nothing to read.
+                    "Command: '{0}' executed on host '{1}'.".format(
+                        cmd, self.host))
+            if not ready[0]:  # If there is nothing to read.
                 continue
             out_chunk = err_chunk = None
             if channel.recv_ready():
@@ -132,16 +142,11 @@ class Client(object):
         exit_status = channel.recv_exit_status()
         if 0 != exit_status:
             raise exceptions.SSHExecCommandFailed(
-                    command=cmd, exit_status=exit_status,
-                    strerror=''.join(err_data))
+                command=cmd, exit_status=exit_status,
+                strerror=''.join(err_data))
         return ''.join(out_data)
 
     def test_connection_auth(self):
-        """Returns true if ssh can connect to server."""
-        try:
-            connection = self._get_ssh_connection()
-            connection.close()
-        except paramiko.AuthenticationException:
-            return False
-
-        return True
+        """Raises an exception when we can not connect to server via ssh."""
+        connection = self._get_ssh_connection()
+        connection.close()

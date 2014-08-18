@@ -1,6 +1,4 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
-# Copyright 2012 OpenStack, LLC
+# Copyright 2012 OpenStack Foundation
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -16,24 +14,30 @@
 #    under the License.
 
 import json
-from tempest.common.rest_client import RestClient
+
+from tempest.api_schema.response.compute.v2 import limits as schema
+from tempest.common import rest_client
+from tempest import config
+
+CONF = config.CONF
 
 
-class LimitsClientJSON(RestClient):
+class LimitsClientJSON(rest_client.RestClient):
 
-    def __init__(self, config, username, password, auth_url, tenant_name=None):
-        super(LimitsClientJSON, self).__init__(config, username, password,
-                                               auth_url, tenant_name)
-        self.service = self.config.compute.catalog_type
+    def __init__(self, auth_provider):
+        super(LimitsClientJSON, self).__init__(auth_provider)
+        self.service = CONF.compute.catalog_type
 
     def get_absolute_limits(self):
         resp, body = self.get("limits")
         body = json.loads(body)
+        self.validate_response(schema.get_limit, resp, body)
         return resp, body['limits']['absolute']
 
     def get_specific_absolute_limit(self, absolute_limit):
         resp, body = self.get("limits")
         body = json.loads(body)
+        self.validate_response(schema.get_limit, resp, body)
         if absolute_limit not in body['limits']['absolute']:
             return None
         else:

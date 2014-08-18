@@ -1,6 +1,4 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-
-# Copyright 2012 OpenStack, LLC
+# Copyright 2012 OpenStack Foundation
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,6 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import testtools
+
 
 class TempestException(Exception):
     """
@@ -27,6 +27,7 @@ class TempestException(Exception):
     message = "An unknown exception occurred"
 
     def __init__(self, *args, **kwargs):
+        super(TempestException, self).__init__()
         try:
             self._error_string = self.message % kwargs
         except Exception:
@@ -45,16 +46,37 @@ class TempestException(Exception):
         return self._error_string
 
 
+class RestClientException(TempestException,
+                          testtools.TestCase.failureException):
+    pass
+
+
+class RFCViolation(RestClientException):
+    message = "RFC Violation"
+
+
 class InvalidConfiguration(TempestException):
     message = "Invalid Configuration"
 
 
-class NotFound(TempestException):
+class InvalidCredentials(TempestException):
+    message = "Invalid Credentials"
+
+
+class InvalidHttpSuccessCode(RestClientException):
+    message = "The success code is different than the expected one"
+
+
+class NotFound(RestClientException):
     message = "Object not found"
 
 
-class Unauthorized(TempestException):
+class Unauthorized(RestClientException):
     message = 'Unauthorized'
+
+
+class InvalidServiceTag(RestClientException):
+    message = "Invalid service tag"
 
 
 class TimeoutException(TempestException):
@@ -63,6 +85,10 @@ class TimeoutException(TempestException):
 
 class BuildErrorException(TempestException):
     message = "Server %(server_id)s failed to build and is in ERROR status"
+
+
+class ImageKilledException(TempestException):
+    message = "Image %(image_id)s 'killed' while waiting for '%(status)s'"
 
 
 class AddImageException(TempestException):
@@ -78,13 +104,36 @@ class VolumeBuildErrorException(TempestException):
     message = "Volume %(volume_id)s failed to build and is in ERROR status"
 
 
-class BadRequest(TempestException):
+class SnapshotBuildErrorException(TempestException):
+    message = "Snapshot %(snapshot_id)s failed to build and is in ERROR status"
+
+
+class VolumeBackupException(TempestException):
+    message = "Volume backup %(backup_id)s failed and is in ERROR status"
+
+
+class StackBuildErrorException(TempestException):
+    message = ("Stack %(stack_identifier)s is in %(stack_status)s status "
+               "due to '%(stack_status_reason)s'")
+
+
+class StackResourceBuildErrorException(TempestException):
+    message = ("Resource %(resource_name)s in stack %(stack_identifier)s is "
+               "in %(resource_status)s status due to "
+               "'%(resource_status_reason)s'")
+
+
+class BadRequest(RestClientException):
     message = "Bad request"
 
 
-class AuthenticationFailure(TempestException):
+class UnprocessableEntity(RestClientException):
+    message = "Unprocessable entity"
+
+
+class AuthenticationFailure(RestClientException):
     message = ("Authentication with user %(user)s and password "
-               "%(password)s failed")
+               "%(password)s failed auth using tenant %(tenant)s.")
 
 
 class EndpointNotFound(TempestException):
@@ -92,23 +141,26 @@ class EndpointNotFound(TempestException):
 
 
 class RateLimitExceeded(TempestException):
-    message = ("Rate limit exceeded.\nMessage: %(message)s\n"
-               "Details: %(details)s")
+    message = "Rate limit exceeded"
 
 
 class OverLimit(TempestException):
     message = "Quota exceeded"
 
 
-class ComputeFault(TempestException):
-    message = "Got compute fault"
+class ServerFault(TempestException):
+    message = "Got server fault"
+
+
+class ImageFault(TempestException):
+    message = "Got image fault"
 
 
 class IdentityError(TempestException):
     message = "Got identity error"
 
 
-class Duplicate(TempestException):
+class Conflict(RestClientException):
     message = "An object with that identifier already exists"
 
 
@@ -127,16 +179,8 @@ class ServerUnreachable(TempestException):
     message = "The server is not reachable via the configured network"
 
 
-class SQLException(TempestException):
-    message = "SQL error: %(message)s"
-
-
 class TearDownException(TempestException):
     message = "%(num)d cleanUp operation failed"
-
-
-class RFCViolation(TempestException):
-    message = "RFC Violation"
 
 
 class ResponseWithNonEmptyBody(RFCViolation):
@@ -147,3 +191,40 @@ class ResponseWithNonEmptyBody(RFCViolation):
 class ResponseWithEntity(RFCViolation):
     message = ("RFC Violation! Response with 205 HTTP Status Code "
                "MUST NOT have an entity")
+
+
+class InvalidHTTPResponseBody(RestClientException):
+    message = "HTTP response body is invalid json or xml"
+
+
+class InvalidHTTPResponseHeader(RestClientException):
+    message = "HTTP response header is invalid"
+
+
+class InvalidContentType(RestClientException):
+    message = "Invalid content type provided"
+
+
+class UnexpectedResponseCode(RestClientException):
+    message = "Unexpected response code received"
+
+
+class InvalidStructure(TempestException):
+    message = "Invalid structure of table with details"
+
+
+class CommandFailed(Exception):
+    def __init__(self, returncode, cmd, output, stderr):
+        super(CommandFailed, self).__init__()
+        self.returncode = returncode
+        self.cmd = cmd
+        self.stdout = output
+        self.stderr = stderr
+
+    def __str__(self):
+        return ("Command '%s' returned non-zero exit status %d.\n"
+                "stdout:\n%s\n"
+                "stderr:\n%s" % (self.cmd,
+                                 self.returncode,
+                                 self.stdout,
+                                 self.stderr))

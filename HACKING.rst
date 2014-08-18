@@ -1,3 +1,18 @@
+Tempest Coding Guide
+====================
+
+- Step 1: Read the OpenStack Style Commandments
+  http://docs.openstack.org/developer/hacking/
+- Step 2: Read on
+
+Tempest Specific Commandments
+------------------------------
+
+- [T102] Cannot import OpenStack python clients in tempest/api tests
+- [T104] Scenario tests require a services decorator
+- [T105] Unit tests cannot use setUpClass
+- [T106] vim configuration should not be kept in source files.
+
 Test Data/Configuration
 -----------------------
 - Assume nothing about existing test data
@@ -6,190 +21,208 @@ Test Data/Configuration
 - Use configuration files for values that will vary by environment
 
 
-General
--------
-- Put two newlines between top-level code (funcs, classes, etc)
-- Put one newline between methods in classes and anywhere else
-- Long lines should be wrapped in parentheses
-  in preference to using a backslash for line continuation.
-- Do not write "except:", use "except Exception:" at the very least
-- Include your name with TODOs as in "#TODO(termie)"
-- Do not name anything the same name as a built-in or reserved word Example::
-
-    def list():
-        return [1, 2, 3]
-
-    mylist = list() # BAD, shadows `list` built-in
-
-    class Foo(object):
-        def list(self):
-            return [1, 2, 3]
-
-    mylist = Foo().list() # OKAY, does not shadow built-in
-
-Imports
--------
-- Do not import objects, only modules (*)
-- Do not import more than one module per line (*)
-- Do not make relative imports
-- Order your imports by the full module path
-- Organize your imports according to the following template
-
-Example::
-
-  # vim: tabstop=4 shiftwidth=4 softtabstop=4
-  {{stdlib imports in human alphabetical order}}
-  \n
-  {{third-party lib imports in human alphabetical order}}
-  \n
-  {{tempest imports in human alphabetical order}}
-  \n
-  \n
-  {{begin your code}}
-
-
-Human Alphabetical Order Examples
----------------------------------
-Example::
-
-  import httplib
-  import logging
-  import random
-  import StringIO
-  import time
-  import unittest
-
-  import eventlet
-  import webob.exc
-
-  import tempest.config
-  from tempest.services.compute.json.limits_client import LimitsClientJSON
-  from tempest.services.compute.xml.limits_client import LimitsClientXML
-  from tempest.services.volume.volumes_client import VolumesClientJSON
-  import tempest.test
-
-
-Docstrings
-----------
-Example::
-
-  """A one line docstring looks like this and ends in a period."""
-
-
-  """A multi line docstring has a one-line summary, less than 80 characters.
-
-  Then a new paragraph after a newline that explains in more detail any
-  general information about the function, class or method. Example usages
-  are also great to have here if it is a complex class for function.
-
-  When writing the docstring for a class, an extra line should be placed
-  after the closing quotations. For more in-depth explanations for these
-  decisions see http://www.python.org/dev/peps/pep-0257/
-
-  If you are going to describe parameters and return values, use Sphinx, the
-  appropriate syntax is as follows.
-
-  :param foo: the foo parameter
-  :param bar: the bar parameter
-  :returns: return_type -- description of the return value
-  :returns: description of the return value
-  :raises: AttributeError, KeyError
-  """
-
-
-Dictionaries/Lists
+Exception Handling
 ------------------
-If a dictionary (dict) or list object is longer than 80 characters, its items
-should be split with newlines. Embedded iterables should have their items
-indented. Additionally, the last item in the dictionary should have a trailing
-comma. This increases readability and simplifies future diffs.
+According to the ``The Zen of Python`` the
+``Errors should never pass silently.``
+Tempest usually runs in special environment (jenkins gate jobs), in every
+error or failure situation we should provide as much error related
+information as possible, because we usually do not have the chance to
+investigate the situation after the issue happened.
+
+In every test case the abnormal situations must be very verbosely explained,
+by the exception and the log.
+
+In most cases the very first issue is the most important information.
+
+Try to avoid using ``try`` blocks in the test cases, both the ``except``
+and ``finally`` block could replace the original exception,
+when the additional operations leads to another exception.
+
+Just letting an exception to propagate, is not bad idea in a test case,
+at all.
+
+Try to avoid using any exception handling construct which can hide the errors
+origin.
+
+If you really need to use a ``try`` block, please ensure the original
+exception at least logged.  When the exception is logged you usually need
+to ``raise`` the same or a different exception anyway.
+
+Use of ``self.addCleanup`` is often a good way to avoid having to catch
+exceptions and still ensure resources are correctly cleaned up if the
+test fails part way through.
+
+Use the ``self.assert*`` methods provided by the unit test framework
+the signal failures early.
+
+Avoid using the ``self.fail`` alone, it's stack trace will signal
+the ``self.fail`` line as the origin of the error.
+
+Avoid constructing complex boolean expressions for assertion.
+The ``self.assertTrue`` or ``self.assertFalse`` without a ``msg`` argument,
+will just tell you the single boolean value, and you will not know anything
+about the values used in the formula, the ``msg`` argument might be good enough
+for providing more information.
+
+Most other assert method can include more information by default.
+For example ``self.assertIn`` can include the whole set.
+
+Recommended to use testtools matcher for more tricky assertion.
+`[doc] <http://testtools.readthedocs.org/en/latest/for-test-authors.html#matchers>`_
+
+You can implement your own specific matcher as well.
+`[doc] <http://testtools.readthedocs.org/en/latest/for-test-authors.html#writing-your-own-matchers>`_
+
+If the test case fails you can see the related logs and the information
+carried by the exception (exception class, backtrack and exception info).
+This and the service logs are your only guide to find the root cause of flaky
+issue.
+
+Test cases are independent
+--------------------------
+Every ``test_method`` must be callable individually and MUST NOT depends on,
+any other ``test_method`` or ``test_method`` ordering.
+
+Test cases MAY depend on commonly initialized resources/facilities, like
+credentials management, testresources and so on. These facilities, MUST be able
+to work even if just one ``test_method`` selected for execution.
+
+Service Tagging
+---------------
+Service tagging is used to specify which services are exercised by a particular
+test method. You specify the services with the tempest.test.services decorator.
+For example:
+
+@services('compute', 'image')
+
+Valid service tag names are the same as the list of directories in tempest.api
+that have tests.
+
+For scenario tests having a service tag is required. For the api tests service
+tags are only needed if the test method makes an api call (either directly or
+indirectly through another service) that differs from the parent directory
+name. For example, any test that make an api call to a service other than nova
+in tempest.api.compute would require a service tag for those services, however
+they do not need to be tagged as compute.
+
+Negative Tests
+--------------
+Newly added negative tests should use the negative test framework. First step
+is to create an interface description in a json file under `etc/schemas`.
+These descriptions consists of two important sections for the test
+(one of those is mandatory):
+
+ - A resource (part of the URL of the request): Resources needed for a test
+ must be created in `setUpClass` and registered with `set_resource` e.g.:
+ `cls.set_resource("server", server['id'])`
+
+ - A json schema: defines properties for a request.
+
+After that a test class must be added to automatically generate test scenarios
+out of the given interface description::
+
+    load_tests = test.NegativeAutoTest.load_tests
+
+    class SampeTestNegativeTestJSON(<your base class>, test.NegativeAutoTest):
+        _interface = 'json'
+        _service = 'compute'
+        _schema_file = <your Schema file>
+
+Negative tests must be marked with a negative attribute::
+
+    @test.attr(type=['negative', 'gate'])
+    def test_get_console_output(self):
+        self.execute(self._schema_file)
+
+All negative tests should be added into a separate negative test file.
+If such a file doesn't exist for the particular resource being tested a new
+test file should be added. Old XML based negative tests can be kept but should
+be renamed to `_xml.py`.
+
+Test skips because of Known Bugs
+--------------------------------
+
+If a test is broken because of a bug it is appropriate to skip the test until
+bug has been fixed. You should use the skip_because decorator so that
+Tempest's skip tracking tool can watch the bug status.
 
 Example::
 
-  my_dictionary = {
-      "image": {
-          "name": "Just a Snapshot",
-          "size": 2749573,
-          "properties": {
-               "user_id": 12,
-               "arch": "x86_64",
-          },
-          "things": [
-              "thing_one",
-              "thing_two",
-          ],
-          "status": "ACTIVE",
-      },
-  }
+  @skip_because(bug="980688")
+  def test_this_and_that(self):
+    ...
 
+Guidelines
+----------
+- Do not submit changesets with only testcases which are skipped as
+  they will not be merged.
+- Consistently check the status code of responses in testcases. The
+  earlier a problem is detected the easier it is to debug, especially
+  where there is complicated setup required.
 
-Calling Methods
----------------
-Calls to methods 80 characters or longer should format each argument with
-newlines. This is not a requirement, but a guideline::
+Parallel Test Execution
+-----------------------
+Tempest by default runs its tests in parallel this creates the possibility for
+interesting interactions between tests which can cause unexpected failures.
+Tenant isolation provides protection from most of the potential race conditions
+between tests outside the same class. But there are still a few of things to
+watch out for to try to avoid issues when running your tests in parallel.
 
-    unnecessarily_long_function_name('string one',
-                                     'string two',
-                                     kwarg1=constants.ACTIVE,
-                                     kwarg2=['a', 'b', 'c'])
+- Resources outside of a tenant scope still have the potential to conflict. This
+  is a larger concern for the admin tests since most resources and actions that
+  require admin privileges are outside of tenants.
 
+- Races between methods in the same class are not a problem because
+  parallelization in tempest is at the test class level, but if there is a json
+  and xml version of the same test class there could still be a race between
+  methods.
 
-Rather than constructing parameters inline, it is better to break things up::
+- The rand_name() function from tempest.common.utils.data_utils should be used
+  anywhere a resource is created with a name. Static naming should be avoided
+  to prevent resource conflicts.
 
-    list_of_strings = [
-        'what_a_long_string',
-        'not as long',
-    ]
+- If the execution of a set of tests is required to be serialized then locking
+  can be used to perform this. See AggregatesAdminTest in
+  tempest.api.compute.admin for an example of using locking.
 
-    dict_of_numbers = {
-        'one': 1,
-        'two': 2,
-        'twenty four': 24,
-    }
+Stress Tests in Tempest
+-----------------------
+Any tempest test case can be flagged as a stress test. With this flag it will
+be automatically discovery and used in the stress test runs. The stress test
+framework itself is a facility to spawn and control worker processes in order
+to find race conditions (see ``tempest/stress/`` for more information). Please
+note that these stress tests can't be used for benchmarking purposes since they
+don't measure any performance characteristics.
 
-    object_one.call_a_method('string three',
-                             'string four',
-                             kwarg1=list_of_strings,
-                             kwarg2=dict_of_numbers)
+Example::
 
+  @stresstest(class_setup_per='process')
+  def test_this_and_that(self):
+    ...
 
-OpenStack Trademark
--------------------
+This will flag the test ``test_this_and_that`` as a stress test. The parameter
+``class_setup_per`` gives control when the setUpClass function should be called.
 
-OpenStack is a registered trademark of OpenStack, LLC, and uses the
-following capitalization:
+Good candidates for stress tests are:
 
-   OpenStack
+- Scenario tests
+- API tests that have a wide focus
 
+Sample Configuration File
+-------------------------
+The sample config file is autogenerated using a script. If any changes are made
+to the config variables in tempest then the sample config file must be
+regenerated. This can be done running the script: tools/generate_sample.sh
 
-Commit Messages
----------------
-Using a common format for commit messages will help keep our git history
-readable. Follow these guidelines:
+Unit Tests
+----------
+Unit tests are a separate class of tests in tempest. They verify tempest
+itself, and thus have a different set of guidelines around them:
 
-  First, provide a brief summary (it is recommended to keep the commit title
-  under 50 chars).
+1. They can not require anything running externally. All you should need to
+   run the unit tests is the git tree, python and the dependencies installed.
+   This includes running services, a config file, etc.
 
-  The first line of the commit message should provide an accurate
-  description of the change, not just a reference to a bug or
-  blueprint. It must be followed by a single blank line.
-
-  If the change relates to a specific driver (libvirt, xenapi, qpid, etc...),
-  begin the first line of the commit message with the driver name, lowercased,
-  followed by a colon.
-
-  Following your brief summary, provide a more detailed description of
-  the patch, manually wrapping the text at 72 characters. This
-  description should provide enough detail that one does not have to
-  refer to external resources to determine its high-level functionality.
-
-  Once you use 'git review', two lines will be appended to the commit
-  message: a blank line followed by a 'Change-Id'. This is important
-  to correlate this commit with a specific review in Gerrit, and it
-  should not be modified.
-
-For further information on constructing high quality commit messages,
-and how to split up commits into a series of changes, consult the
-project wiki:
-
-   http://wiki.openstack.org/GitCommitMessages
+2. The unit tests cannot use setUpClass, instead fixtures and testresources
+   should be used for shared state between tests.

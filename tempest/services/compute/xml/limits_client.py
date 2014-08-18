@@ -1,6 +1,4 @@
-# vim: tabstop=4 shiftwidth=4 softtabstop=4
-#
-# Copyright 2012 IBM
+# Copyright 2012 IBM Corp.
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,23 +13,25 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from lxml import etree
 from lxml import objectify
 
-from tempest.common.rest_client import RestClientXML
+from tempest.common import rest_client
+from tempest import config
+
+CONF = config.CONF
 
 NS = "{http://docs.openstack.org/common/api/v1.0}"
 
 
-class LimitsClientXML(RestClientXML):
+class LimitsClientXML(rest_client.RestClient):
+    TYPE = "xml"
 
-    def __init__(self, config, username, password, auth_url, tenant_name=None):
-        super(LimitsClientXML, self).__init__(config, username, password,
-                                              auth_url, tenant_name)
-        self.service = self.config.compute.catalog_type
+    def __init__(self, auth_provider):
+        super(LimitsClientXML, self).__init__(auth_provider)
+        self.service = CONF.compute.catalog_type
 
     def get_absolute_limits(self):
-        resp, body = self.get("limits", self.headers)
+        resp, body = self.get("limits")
         body = objectify.fromstring(body)
         lim = NS + 'absolute'
         ret = {}
@@ -42,7 +42,7 @@ class LimitsClientXML(RestClientXML):
         return resp, ret
 
     def get_specific_absolute_limit(self, absolute_limit):
-        resp, body = self.get("limits", self.headers)
+        resp, body = self.get("limits")
         body = objectify.fromstring(body)
         lim = NS + 'absolute'
         ret = {}
